@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+from data_extractor import find_data
+from data_extractor import Outcar
+from data_extractor import Oszicar
+from data_extractor import Poscar
+from os import getcwd
+from sys import argv
+from csv import writer
+from csv import QUOTE_MINIMAL
+
+# Checks if information from the OUTCAR is wanted
+def outcar_is_wanted():
+    if 'total_cpu_time' in argv:
+        return True
+    else:
+        return False
+
+# Checks if information from the OSZICAR is wanted
+def oszicar_is_wanted():
+    if 'total_energy' or 'all_energies' in argv:
+        return True
+    else:
+        return False
+
+# Checks if information from the POSCAR is wanted
+def poscar_is_wanted():
+    if 'title' or 'formula_unit' in argv:
+        return True
+    else:
+        return False
+
+# Extracts the data specified in the input arguments
+def main():
+    current_path = getcwd()
+    result_csv_file = writer(open('%s/results.csv' % current_path,'wb'),delimiter=',',quotechar='|',quoting=QUOTE_MINIMAL)
+    if 'all_energies' in argv:
+        energy_csv_file = writer(open('%s/all_energies.csv' % current_path,'wb'),delimiter=',',quotechar='|',quoting=QUOTE_MINIMAL)
+    data_paths =[] 
+    find_data(current_path,data_paths)
+    for path in data_paths:
+        if outcar_is_wanted(): outcar = Outcar(path)
+        if oszicar_is_wanted(): oszicar = Oszicar(path)
+        if poscar_is_wanted(): poscar = Poscar(path)
+        results=[]
+        for argument in argv:
+            if argument == 'title':
+                results.append(poscar.title)
+            elif argument == 'total_energy':
+                results.append(oszicar.total_energy)
+            elif argument == 'all_energies':
+                energy_csv_file.writerow([poscar.title]+oszicar.all_energies)
+            elif argument == 'formula_unit':
+                results.append(poscar.formula_unit)
+            elif argument == 'total_cpu_time':
+                results.append(outcar.total_cpu_time)
+        result_csv_file.writerow(results)
+
+if __name__ == '__main__':
+    if len(argv) == 1:
+        argv = argv + ['title','total_energy','formula_unit','total_cpu_time','all_energies']
+    print "\nRunning extract this for: "
+    for i in range(len(argv)): 
+        if i != 0: print argv[i]
+    print '\n'
+    main()
