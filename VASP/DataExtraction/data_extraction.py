@@ -68,7 +68,7 @@ class Kpoints:
     
     def __init__(self,path):
         self.path = path
-        self.kpoint = self.extract_kpoints()
+        self.kpoints = self.extract_kpoints()
         self.type = self.extraxt_type()
         
     def __repr__(self):

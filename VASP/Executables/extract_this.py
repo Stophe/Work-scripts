@@ -3,6 +3,7 @@ from data_extraction import find_data
 from data_extraction import Outcar
 from data_extraction import Oszicar
 from data_extraction import Poscar
+from data_extraction import Kpoints
 from os import getcwd
 from sys import argv
 from csv import writer
@@ -28,6 +29,12 @@ def poscar_is_wanted():
         return True
     else:
         return False
+    
+def kpoints_is_wanted():
+    if 'kpoints' or 'kpoint_type' in argv:
+        return True
+    else:
+        return False
 
 # Extracts the data specified in the input arguments
 def main():
@@ -41,6 +48,7 @@ def main():
         if outcar_is_wanted(): outcar = Outcar(path)
         if oszicar_is_wanted(): oszicar = Oszicar(path)
         if poscar_is_wanted(): poscar = Poscar(path)
+        if kpoints_is_wanted(): kpoints = Kpoints(path)
         results=[]
         for argument in argv:
             if argument == 'title':
@@ -53,11 +61,15 @@ def main():
                 results.append(poscar.formula_unit)
             elif argument == 'total_cpu_time':
                 results.append(outcar.total_cpu_time)
+            elif argument == 'kpoints':
+                results.append(kpoints)
+            elif argument == 'kpoint_type':
+                results.append(kpoints.type)
         result_csv_file.writerow(results)
 
 if __name__ == '__main__':
     if len(argv) == 1:
-        argv = argv + ['title','total_energy','formula_unit','total_cpu_time','all_energies']
+        argv = argv + ['title','total_energy','formula_unit','total_cpu_time','all_energies','kpoints']
     print "\nRunning extract this for: "
     for i in range(len(argv)): 
         if i != 0: print argv[i]
