@@ -2,6 +2,7 @@
 from os import listdir
 from os.path import isdir
 from linecache import getline
+from numpy import array
 
 class Outcar:
 
@@ -62,7 +63,25 @@ class Poscar:
             return maximum
         except:
             print "No POSCAR in %s" % (self.path)
-
+            
+class Kpoints:
+    
+    def __init__(self,path):
+        self.path = path
+        self.kpoint = self.extract_kpoints()
+        self.type = self.extraxt_type()
+        
+    def __repr__(self):
+        return "%ix%ix%i" % (self.kpoint[0],self.kpoint[1],self.kpoint[2])
+    
+    # Extracts the k-points as an array
+    def extract_kpoints(self):
+        l = getline("%s/KPOINTS" % self.path, 4).split()
+        return array([l[0],l[1],l[2]])
+    
+    # Extracts the type of the k-mesh
+    def extract_type(self):
+        return getline("%s/KPOINTS" % self.path,3).split()[0]
 
 # Finds the paths to the result files
 def find_data(path,list_of_paths):

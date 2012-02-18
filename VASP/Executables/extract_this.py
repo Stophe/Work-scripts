@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-from data_extractor import find_data
-from data_extractor import Outcar
-from data_extractor import Oszicar
-from data_extractor import Poscar
+from data_extraction import find_data
+from data_extraction import Outcar
+from data_extraction import Oszicar
+from data_extraction import Poscar
 from os import getcwd
 from sys import argv
 from csv import writer
