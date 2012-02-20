@@ -90,9 +90,7 @@ def main():
     ef.close()
     
     if 'print' in sys.argv: 
-        print "AAAAAAA"
-        from os import path as os_path
-        system('/bin/cat "%s"' % os_path.join(current_path, "results.csv"))
+        system('/bin/cat "%s/results.csv"' % current_path)
 
 if __name__ == '__main__':
     main()
