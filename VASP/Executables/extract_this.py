@@ -5,6 +5,7 @@ from data_extraction import Oszicar
 from data_extraction import Poscar
 from data_extraction import Kpoints
 from os import getcwd
+from os import system
 from sys import argv
 from csv import writer
 from csv import QUOTE_MINIMAL
@@ -76,8 +77,5 @@ if __name__ == '__main__':
     if len(argv) == 1:
         argv = argv + ['title','total_energy','formula_unit','total_cpu_time','all_energies',
                        'kpoints','total_kpoints','kpoint_type']
-    print "\nRunning extract this for: "
-    for i in range(len(argv)): 
-        if i != 0: print argv[i]
-    print '\n'
     main()
+    if 'print' in argv: system('cat results.csv')

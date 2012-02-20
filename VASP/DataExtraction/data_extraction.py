@@ -8,7 +8,6 @@ class Outcar:
 
     def __init__(self,path):
         self.path = path
-        self.finished = False
         self.total_cpu_time = 0
         self.extract_data()
     
@@ -18,9 +17,7 @@ class Outcar:
         for line in f:
             if 'Total CPU time' in line:
                 self.total_cpu_time = line.split()[5]
-                self.finished = True
         f.close()
-        if not self.finished: print "OUTCAR not finished in %s" % (self.path)
             
 class Oszicar:
     
@@ -48,21 +45,15 @@ class Poscar:
 
     # Extracts the title line of the POSCAR        
     def extract_title(self):
-        try: 
-            return getline("%s/POSCAR" % (self.path),1)[:-1]
-        except:
-            print "No POSCAR in %s" % (self.path)
+        return getline("%s/POSCAR" % (self.path),1)[:-1]
 
     # Extracts the formula unit from the POSCAR (by getting the most occurring atom type)
     def extract_formula_unit(self):
-        try: 
-            counts = getline("%s/POSCAR" % (self.path),7).split()
-            maximum = counts[0]
-            for count in counts:
-                if count > maximum: maximum = count
-            return maximum
-        except:
-            print "No POSCAR in %s" % (self.path)
+        counts = getline("%s/POSCAR" % (self.path),7).split()
+        maximum = counts[0]
+        for count in counts:
+            if count > maximum: maximum = count
+        return maximum
             
 class Kpoints:
     
