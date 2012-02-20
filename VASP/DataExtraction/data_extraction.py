@@ -69,7 +69,7 @@ class Kpoints:
     def __init__(self,path):
         self.path = path
         self.kpoints = self.extract_kpoints()
-        self.type = self.extraxt_type()
+        self.type = self.extract_type()
         self.total_kpoints = self.kpoints[0]*self.kpoints[1]*self.kpoints[2]
         
     def __repr__(self):
@@ -78,7 +78,7 @@ class Kpoints:
     # Extracts the k-points as an array
     def extract_kpoints(self):
         l = getline("%s/KPOINTS" % self.path, 4).split()
-        return array([l[0],l[1],l[2]])
+        return array([int(l[0]),int(l[1]),int(l[2])])
     
     # Extracts the type of the k-mesh
     def extract_type(self):
