@@ -6,6 +6,7 @@ from data_extraction import Poscar
 from data_extraction import Kpoints
 from os import getcwd
 from os import system
+from os.path import isdir
 from sys import argv
 from csv import writer
 from csv import QUOTE_MINIMAL
@@ -39,8 +40,7 @@ def kpoints_is_wanted():
         return False
 
 # Extracts the data specified in the input arguments
-def main():
-    current_path = getcwd()
+def main(current_path):
     result_csv_file = writer(open('%s/results.csv' % current_path,'wb'),
                              delimiter=',',quotechar='|',quoting=QUOTE_MINIMAL)
     if 'all_energies' in argv:
@@ -74,8 +74,13 @@ def main():
         result_csv_file.writerow(results)
 
 if __name__ == '__main__':
+    current_path = getcwd()
     if len(argv) == 1:
-        argv = argv + ['title','total_energy','formula_unit','total_cpu_time','all_energies',
+        argv = argv + [current_path,'title','total_energy','formula_unit','total_cpu_time','all_energies',
                        'kpoints','total_kpoints','kpoint_type']
-    main()
+        main(current_path)
+    elif isdir(argv[1]):
+        main(argv[1])
+    else:
+        main(current_path)
     if 'print' in argv: system('cat results.csv')
