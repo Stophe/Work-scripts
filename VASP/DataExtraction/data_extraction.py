@@ -70,9 +70,10 @@ class Kpoints:
         self.path = path
         self.kpoints = self.extract_kpoints()
         self.type = self.extraxt_type()
+        self.total_kpoints = self.kpoints[0]*self.kpoints[1]*self.kpoints[2]
         
     def __repr__(self):
-        return "%ix%ix%i" % (self.kpoint[0],self.kpoint[1],self.kpoint[2])
+        return "%ix%ix%i" % (self.kpoints[0],self.kpoints[1],self.kpoints[2])
     
     # Extracts the k-points as an array
     def extract_kpoints(self):

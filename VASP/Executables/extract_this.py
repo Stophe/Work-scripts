@@ -31,7 +31,8 @@ def poscar_is_wanted():
         return False
     
 def kpoints_is_wanted():
-    if 'kpoints' or 'kpoint_type' in argv:
+    possible_settings =['kpoints','kpoint_type','total_kpoints']
+    if len(set(possible_settings).intersection(set(argv))) > 0:
         return True
     else:
         return False
@@ -39,9 +40,11 @@ def kpoints_is_wanted():
 # Extracts the data specified in the input arguments
 def main():
     current_path = getcwd()
-    result_csv_file = writer(open('%s/results.csv' % current_path,'wb'),delimiter=',',quotechar='|',quoting=QUOTE_MINIMAL)
+    result_csv_file = writer(open('%s/results.csv' % current_path,'wb'),
+                             delimiter=',',quotechar='|',quoting=QUOTE_MINIMAL)
     if 'all_energies' in argv:
-        energy_csv_file = writer(open('%s/all_energies.csv' % current_path,'wb'),delimiter=',',quotechar='|',quoting=QUOTE_MINIMAL)
+        energy_csv_file = writer(open('%s/all_energies.csv' % current_path,'wb'),
+                                 delimiter=',',quotechar='|',quoting=QUOTE_MINIMAL)
     data_paths =[] 
     find_data(current_path,data_paths)
     for path in data_paths:
@@ -63,13 +66,16 @@ def main():
                 results.append(outcar.total_cpu_time)
             elif argument == 'kpoints':
                 results.append(kpoints)
+            elif argument == 'total_kpoints':
+                results.append(kpoints.total_kpoints)
             elif argument == 'kpoint_type':
                 results.append(kpoints.type)
         result_csv_file.writerow(results)
 
 if __name__ == '__main__':
     if len(argv) == 1:
-        argv = argv + ['title','total_energy','formula_unit','total_cpu_time','all_energies','kpoints']
+        argv = argv + ['title','total_energy','formula_unit','total_cpu_time','all_energies',
+                       'kpoints','total_kpoints','kpoint_type']
     print "\nRunning extract this for: "
     for i in range(len(argv)): 
         if i != 0: print argv[i]
