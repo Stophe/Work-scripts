@@ -76,6 +76,22 @@ class Kpoints:
         # Extracts the type of the k-mesh
         return getline("%s/KPOINTS" % self.path, 3).split()[0]
 
+class Incar:
+    
+
+    def extract_data(self):
+        f = open("%s/INCAR" % self.path, 'r')
+        for line in f:
+            if 'ENCUT' in line:
+                pass
+        f.close()
+    
+    
+    def __init__(self, path):
+        self.path = path
+        self.encut = 0
+        self.extract_encut()
+
 def find_data(path, list_of_paths):
     """Finds the paths to the result files"""
     directory_list = listdir(path)
