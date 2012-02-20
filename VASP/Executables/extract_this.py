@@ -76,11 +76,9 @@ def main(current_path):
 if __name__ == '__main__':
     current_path = getcwd()
     if len(argv) == 1:
-        argv = argv + [current_path,'title','total_energy','formula_unit','total_cpu_time','all_energies',
+        argv = argv + ['title','total_energy','formula_unit','total_cpu_time','all_energies',
                        'kpoints','total_kpoints','kpoint_type']
-        main(current_path)
     elif isdir(argv[1]):
-        main(argv[1])
-    else:
-        main(current_path)
-    if 'print' in argv: system('cat results.csv')
+        current_path = argv[1]
+    main(current_path)
+    if 'print' in argv: system("cat '%s/results.csv'" % current_path)
