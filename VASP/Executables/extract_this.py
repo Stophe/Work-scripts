@@ -8,6 +8,7 @@ from data_extraction import Outcar
 from data_extraction import Oszicar
 from data_extraction import Poscar
 from data_extraction import Kpoints
+from data_extraction import Incar
 
 def outcar_is_needed():
     """Checks if information from the OUTCAR is needed. Returns True if it is, no otherwise."""
@@ -41,6 +42,16 @@ def kpoints_is_needed():
     else:
         return False
 
+
+def incar_is_needed():
+    """Checks if information from the INCAR is needed. Returns true if it is, no otherwise."""
+    possible_settings = ['encut']
+    if set(possible_settings).intersection(set(sys.argv)):
+        return True
+    else:
+        return False
+
+
 def main():
     """
     The main function. Extracts the data specified in the input arguments.
@@ -51,7 +62,7 @@ def main():
     current_path = getcwd()
     if len(sys.argv) == 1:
         sys.argv = sys.argv + ['kpoints', 'kpoint_type', 'total_kpoints', 'title', 'formula_unit',
-                               'total_energy', 'all_energies','total_cpu_time', 'print']
+                               'total_energy', 'all_energies','total_cpu_time', 'encut', 'print']
     elif isdir(sys.argv[1]):
         current_path = sys.argv[1]
     rf = open('%s/results.csv' % current_path, 'wb')
@@ -66,6 +77,7 @@ def main():
         if oszicar_is_needed(): oszicar = Oszicar(path)
         if poscar_is_needed(): poscar = Poscar(path)
         if kpoints_is_needed(): kpoints = Kpoints(path)
+        if incar_is_needed(): incar = Incar(path)
         results = []
         
         for argument in sys.argv:
@@ -85,6 +97,8 @@ def main():
                 results.append(kpoints.total_kpoints)
             elif argument == 'kpoint_type':
                 results.append(kpoints.mesh_type)
+            elif argument == 'encut':
+                results.append(incar.encut)
         result_csv_file.writerow(results)
     rf.close()
     try: ef.close()

@@ -77,20 +77,19 @@ class Kpoints:
         return getline("%s/KPOINTS" % self.path, 3).split()[0]
 
 class Incar:
-    
-
-    def extract_data(self):
-        f = open("%s/INCAR" % self.path, 'r')
-        for line in f:
-            if 'ENCUT' in line:
-                pass
-        f.close()
-    
-    
+      
     def __init__(self, path):
         self.path = path
         self.encut = 0
-        self.extract_encut()
+        self.extract_data()
+        
+            
+    def extract_data(self):
+        f = open("%s/INCAR" % self.path, 'r')
+        for line in f:
+            if 'ENCUT' in line and '#ENCUT' not in line:
+                self.encut = line.split('=')[1][:-1]
+        f.close()
 
 def find_data(path, list_of_paths):
     """Finds the paths to the result files"""
