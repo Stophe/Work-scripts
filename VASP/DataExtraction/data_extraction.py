@@ -2,7 +2,10 @@
 from os import listdir
 from os.path import isdir
 from linecache import getline
+from linecache import clearcache
 from numpy import array
+from numpy.linalg import norm
+from numpy import cross
 
 class Outcar:
 
@@ -37,24 +40,45 @@ class Oszicar:
         self.total_energy = self.all_energies[-1]
 
 class Poscar:
-    
+            
     def __init__(self, path):
         self.path = path
-        self.title = self.extract_title()
-        self.formula_unit = self.extract_formula_unit()
+        self.title = ""
+        self.formula_unit = 0
+        self.a0 = 0
+        self.a1 = array([0,0,0])
+        self.a2 = array([0,0,0])
+        self.a3 = array([0,0,0])
+        self.surface_area = 0
+        self.extract_data()
 
-    def extract_title(self):
+    def extract_data(self):
         # Extracts the title line of the POSCAR        
-        return getline("%s/POSCAR" % (self.path), 1)[:-1]
-
-    def extract_formula_unit(self):
+        self.title = getline("%s/POSCAR" % (self.path), 1)[:-1]
+        
+        # Extracts the lattice constant
+        self.a0 = float(getline("%s/POSCAR" % (self.path), 2).split()[0])
+        
+        # Extracts the unitcell vectors as arrays
+        split_line = getline("%s/POSCAR" % (self.path), 3).split()
+        self.a1 = array([float(split_line[0]), float(split_line[1]), float(split_line[2])])
+        split_line = getline("%s/POSCAR" % (self.path), 4).split()
+        self.a2 = array([float(split_line[0]), float(split_line[1]), float(split_line[2])])
+        split_line = getline("%s/POSCAR" % (self.path), 5).split()
+        self.a3 = array([float(split_line[0]), float(split_line[1]), float(split_line[2])])
+        
+        # Calculates the surface area. Assuming the surface is in the a3 direction
+        self.surface_area = self.a0*2*norm(cross(self.a1,self.a2))
+        
         # Extracts the formula unit from the POSCAR (by getting the most occurring atom type)
         counts = getline("%s/POSCAR" % (self.path), 7).split()
         maximum = counts[0]
         for count in counts:
             if count > maximum: maximum = count
-        return maximum
-            
+        self.formula_unit = maximum
+        
+        clearcache()        
+
 class Kpoints:
     
     def __init__(self, path):

@@ -28,7 +28,7 @@ def oszicar_is_needed():
 
 def poscar_is_needed():
     """Checks if information from the POSCAR is needed. Returns True if it is, no otherwise."""
-    possible_settings = ['title', 'formula_unit']
+    possible_settings = ['title', 'formula_unit', 'surface_area', 'lattice_constant']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -62,7 +62,7 @@ def main():
     current_path = getcwd()
     if len(sys.argv) == 1:
         sys.argv = sys.argv + ['kpoints', 'kpoint_type', 'total_kpoints', 'title', 'formula_unit',
-                               'total_energy', 'all_energies','total_cpu_time', 'encut', 'print']
+                               'total_energy', 'all_energies','total_cpu_time', 'encut', 'surface_area', 'print']
     elif isdir(sys.argv[1]):
         current_path = sys.argv[1]
     rf = open('%s/results.csv' % current_path, 'wb')
@@ -83,12 +83,16 @@ def main():
         for argument in sys.argv:
             if argument == 'title':
                 results.append(poscar.title)
+            elif argument == 'lattice_constant':
+                results.append(poscar.a0)
+            elif argument == 'surface_area':
+                results.append(poscar.surface_area)
+            elif argument == 'formula_unit':
+                results.append(poscar.formula_unit)
             elif argument == 'total_energy':
                 results.append(oszicar.total_energy)
             elif argument == 'all_energies':
                 energy_csv_file.writerow([poscar.title] + oszicar.all_energies)
-            elif argument == 'formula_unit':
-                results.append(poscar.formula_unit)
             elif argument == 'total_cpu_time':
                 results.append(outcar.total_cpu_time)
             elif argument == 'kpoints':
