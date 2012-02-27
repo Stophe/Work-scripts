@@ -3,12 +3,12 @@ from os import getcwd, system
 from os.path import isdir
 import sys
 from csv import writer,QUOTE_MINIMAL
-from data_extraction import find_data
-from data_extraction import Outcar
-from data_extraction import Oszicar
-from data_extraction import Poscar
-from data_extraction import Kpoints
-from data_extraction import Incar
+from vasp.find import Find
+from vasp.outcar import Outcar
+from vasp.oszicar import Oszicar
+from vasp.poscar import Poscar
+from vasp.kpoints import Kpoints
+from vasp.incar import Incar
 
 def outcar_is_needed():
     """Checks if information from the OUTCAR is needed. Returns True if it is, no otherwise."""
@@ -70,9 +70,8 @@ def main():
     if 'all_energies' in sys.argv:
         ef = open('%s/all_energies.csv' % current_path, 'wb')
         energy_csv_file = writer(ef, delimiter=',', quotechar='|', quoting = QUOTE_MINIMAL)
-    data_paths = [] 
-    find_data(current_path,data_paths)
-    for path in data_paths:
+    find = Find(current_path, 'OUTCAR') 
+    for path in find.paths:
         if outcar_is_needed(): outcar = Outcar(path)
         if oszicar_is_needed(): oszicar = Oszicar(path)
         if poscar_is_needed(): poscar = Poscar(path)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from supercell import *
+from vasp.supercell import *
 
 def main():
 	# Path to save the POSCAR in
