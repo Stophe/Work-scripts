@@ -17,8 +17,8 @@ class Kpoints(object):
         Constructor
         '''
         self.path = path
-        self.kpoints = self.extract_kpoints()
-        self.mesh_type = self.extract_type()
+        self.kpoints = self._extract_kpoints()
+        self.mesh_type = self._extract_type()
         self.total_kpoints = (self.kpoints[0] * self.kpoints[1]
                               * self.kpoints[2])
 
@@ -26,11 +26,11 @@ class Kpoints(object):
         # Sets how the Kpoints class object is represented
         return "%ix%ix%i" % (self.kpoints[0], self.kpoints[1], self.kpoints[2])
 
-    def extract_kpoints(self):
+    def _extract_kpoints(self):
         # Extracts the k-points as an array
         line = getline("%s/KPOINTS" % self.path, 4).split()
         return array([int(line[0]), int(line[1]), int(line[2])])
 
-    def extract_type(self):
+    def _extract_type(self):
         # Extracts the type of the k-mesh
         return getline("%s/KPOINTS" % self.path, 3).split()[0]

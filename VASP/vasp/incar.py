@@ -16,9 +16,9 @@ class Incar(object):
         '''
         self.path = path
         self.encut = 0
-        self.extract_data()
+        self._extract_data()
 
-    def extract_data(self):
+    def _extract_data(self):
         f = open("%s/INCAR" % self.path, 'r')
         for line in f:
             if 'ENCUT' in line and '#ENCUT' not in line:
