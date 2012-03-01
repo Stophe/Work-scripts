@@ -20,6 +20,7 @@ class Poscar(object):
         Constructor
         '''
         self.path = path
+        self.version = 0
         self.title = ""
         self.formula_unit = 0
         self.a0 = 0
@@ -30,6 +31,12 @@ class Poscar(object):
         self._extract_data()
 
     def _extract_data(self):
+        line = getline("%s/POSCAR" % (self.path), 8).split()[0]
+        if line[0] in ['K', 'k', 'C', 'c', 'D', 'd']:
+            self.version = 5
+        else:
+            self.version = 4
+
         # Extracts the title line of the POSCAR
         self.title = getline("%s/POSCAR" % (self.path), 1)[:-1]
 
@@ -53,10 +60,14 @@ class Poscar(object):
 
         # Extracts the formula unit from the POSCAR
         # (by getting the most occurring atom type)
-        counts = getline("%s/POSCAR" % (self.path), 7).split()
+        if self.version == 5:
+            counts = getline("%s/POSCAR" % (self.path), 7).split()
+        else:
+            counts = getline("%s/POSCAR" % (self.path), 6).split()
         maximum = counts[0]
         for count in counts:
             if count > maximum: maximum = count
         self.formula_unit = maximum
+            
         
         clearcache()    
