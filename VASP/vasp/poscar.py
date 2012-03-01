@@ -64,9 +64,9 @@ class Poscar(object):
             counts = getline("%s/POSCAR" % (self.path), 7).split()
         else:
             counts = getline("%s/POSCAR" % (self.path), 6).split()
-        maximum = counts[0]
+        maximum = int(counts[0])
         for count in counts:
-            if count > maximum: maximum = count
+            if int(count) > maximum: maximum = int(count)
         self.formula_unit = maximum
             
         
