@@ -16,7 +16,7 @@ def outcar_is_needed():
     """Checks if information from the OUTCAR is needed. Returns True if it is,
     no otherwise.
     """
-    possible_settings = ['total_cpu_time']
+    possible_settings = ['total_cpu_time', 'volume']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -128,6 +128,8 @@ def main():
                 f.close()
             elif argument == 'total_cpu_time':
                 results.append(outcar.total_cpu_time)
+            elif argument == 'volume':
+                results.append(outcar.volume)
             elif argument == 'kpoints':
                 results.append(kpoints)
             elif argument == 'total_kpoints':
