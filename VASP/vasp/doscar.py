@@ -21,6 +21,6 @@ class Doscar(object):
 
     def _extract_data(self):
         steps = int(getline('%s/DOSCAR' % self.path, 6).split()[2])
-        for i in range(7, steps):
+        for i in range(7, steps + 7):
             line = getline('%s/DOSCAR' % self.path, i).split()
             self.dos.append((line[0], line[1], line[2]))
