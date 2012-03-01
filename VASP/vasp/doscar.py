@@ -20,11 +20,7 @@ class Doscar(object):
         self._extract_data()
 
     def _extract_data(self):
-        i = 7
-        while True:
+        steps = getline('%s/DOSCAR' % self.path, 6).split()[2]
+        for i in range(7, steps):
             line = getline('%s/DOSCAR' % self.path, i).split()
-            if len(line) == 3:
-                self.dos.append((line[0], line[1], line[2]))
-            else:
-                break
-            i += 1
+            self.dos.append((line[0], line[1], line[2]))

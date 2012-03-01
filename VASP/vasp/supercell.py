@@ -11,12 +11,12 @@ from vasp.primitive_cell import PrimitiveCell
 
 class SuperCell:
 
-    def __init__(self, lp, pc, list_of_atoms):
+    def __init__(self, a0, pc, list_of_atoms):
         """
         SuperCell is initiated with a lattice parameter, primitive cell and
         a list of atoms for the basis.
         """
-        self.lattice_parameter = lp
+        self.a0 = a0
         self.primitive_cell = pc
         self.atoms = []
         for atom in list_of_atoms:
@@ -72,7 +72,7 @@ class SuperCell:
 
     def add_vacuum(self, vacuum, direction=2): 
         # Adds vacuum layer given in Angstrom		
-        norm_a_real = self.lattice_parameter * norm(self.primitive_cell.matrix[direction])
+        norm_a_real = self.a0 * norm(self.primitive_cell.matrix[direction])
         displacement_factor = (vacuum - (1 - self.get_highest_position()) * norm_a_real) / norm_a_real + 1
 
         for atom in self.atoms:
@@ -110,7 +110,7 @@ class SuperCell:
             outfile = open(path + '/POSCAR', 'w')
             outfile.write(self.atom_counts('title'))
             outfile.write(' - %s\n' % datetime.now())
-            outfile.write('%f\n' % self.lattice_parameter)
+            outfile.write('%f\n' % self.a0)
             outfile.write(str(self.primitive_cell))
             outfile.write(self.atom_counts('letters'))
             outfile.write(self.atom_counts('numbers'))
@@ -160,13 +160,17 @@ class SuperCell:
         
         Takes an array as input
         """
-        print new_direction
-        new_direction = self.convert_to_direct(new_direction)
+        new_a3 = new_direction / self.a0
+        print new_a3
+        new_direction = self.convert_to_direct(new_a3)
         print new_direction
 
 
     def convert_to_direct(self, array):
-        return dot(array, self.primitive_cell.matrix)
+        return dot(self.primitive_cell.matrix, array)
+    
+    def convert_to_real(self, array):
+        return dot(self.primitive_cell.matrix, array)
 
 def test():
     a0 = 4.2557
@@ -193,7 +197,7 @@ def test():
     print super_cell.atom_counts('numbers')
     super_cell.center_positions()
     for at in super_cell.atoms: print at
-    super_cell.change_surface(array([0 ,0, 1]))
+    super_cell.change_surface(array([0 ,0, a0]))
         
 
 if __name__ == '__main__':
