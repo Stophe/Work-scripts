@@ -3,6 +3,8 @@
 from numpy import array
 from numpy import dot
 from numpy.linalg import norm
+from numpy.linalg import inv
+from numpy import cross
 from datetime import datetime
 from copy import deepcopy
 from vasp.atom import Atom
@@ -160,17 +162,42 @@ class SuperCell:
         
         Takes an array as input
         """
+        new_supercell = deepcopy(self)
+        self.expand_3D((3, 3, 3))
+        self.transpose_basis((0.5, 0.5, 0.5))
         new_a3 = new_direction / self.a0
-        print new_a3
-        new_direction = self.convert_to_direct(new_a3)
-        print new_direction
-
+        new_a3_direct = self.convert_to_direct(new_a3)
+        origin_at = filter(lambda Atom: norm(Atom.position) == 0, self.atoms)[0]
+        min_v = array([0, 0, 1])
+        for atom in self.atoms:
+            if (len(cross(atom.position, new_a3_direct)) == 0 
+                and atom.symbol == origin_at.symbol 
+                and norm(atom.position) != 0):
+                if norm(atom.position) < norm(min_v):
+                    min_v = atom.position
+        new_a2_direct = min_v
+        new_a2 = self.convert_to_real(min_v)
+        new_a1_direct = cross(new_a2_direct, new_a3_direct)
+        new_a1 = self.convert_to_real(new_a1_direct)
+        
+        print new_a1_direct, new_a2_direct, new_a3_direct
+        print new_a1, new_a2, new_a3
+        new_supercell.primitive_cell = PrimitiveCell(new_a1, new_a2, new_a3)
+        print self.primitive_cell
+        print new_supercell.primitive_cell
+        
+        
+        
+        
+    def transpose_basis(self, to):
+        for atom in self.atoms:
+            atom.position = atom.position - array([to[0], to[1], to[2]])
 
     def convert_to_direct(self, array):
-        return dot(self.primitive_cell.matrix, array)
+        return dot(array, self.primitive_cell.matrix)
     
     def convert_to_real(self, array):
-        return dot(self.primitive_cell.matrix, array)
+        return dot(inv(self.primitive_cell.matrix), array)
 
 def test():
     a0 = 4.2557
@@ -178,26 +205,28 @@ def test():
     n = Atom('N',array([0.5,0.5,0.5]))
     primitive_cell = PrimitiveCell(array([0.,0.5,0.5]),array([0.5,0.,0.5]),array([0.5,0.5,0.]))
     super_cell = SuperCell(a0,primitive_cell,[ti,n])
-    super_cell.expand_3D((0,0,4))
-    print super_cell.primitive_cell
-    #super_cell.sort()
-    for at in super_cell.atoms: print at
-    print "\nHighest: %f\nLowest: %f\n" % (super_cell.get_highest_position(),super_cell.get_lowest_position())
-    print "\nAdding vacuum..."
-    super_cell.add_vacuum(10)
-    print super_cell.primitive_cell
-    print (1-super_cell.get_highest_position())*norm(super_cell.primitive_cell.matrix[2])*a0
-    for at in super_cell.atoms: print at
-    print super_cell.atom_counts('numbers')
-    print "\nRemoving layer...\n"
-    super_cell.remove_layer(super_cell.get_highest_position())
-    print super_cell.primitive_cell
-    print (1-super_cell.get_highest_position())*norm(super_cell.primitive_cell.matrix[2])*a0
-    for at in super_cell.atoms: print at
-    print super_cell.atom_counts('numbers')
-    super_cell.center_positions()
-    for at in super_cell.atoms: print at
+    #super_cell.expand_3D((0,0,4))
     super_cell.change_surface(array([0 ,0, a0]))
+#    print super_cell.primitive_cell
+#    #super_cell.sort()
+#    for at in super_cell.atoms: print at
+#    print "\nHighest: %f\nLowest: %f\n" % (super_cell.get_highest_position(),super_cell.get_lowest_position())
+#    print "\nAdding vacuum..."
+    super_cell.add_vacuum(10)
+#    print super_cell.primitive_cell
+#    print (1-super_cell.get_highest_position())*norm(super_cell.primitive_cell.matrix[2])*a0
+#    for at in super_cell.atoms: print at
+#    print super_cell.atom_counts('numbers')
+#    print "\nRemoving layer...\n"
+#    super_cell.remove_layer(super_cell.get_highest_position())
+#    print super_cell.primitive_cell
+#    print (1-super_cell.get_highest_position())*norm(super_cell.primitive_cell.matrix[2])*a0
+#    for at in super_cell.atoms: print at
+#    print super_cell.atom_counts('numbers')
+#    super_cell.center_positions()
+#    for at in super_cell.atoms: print at
+#    super_cell.save_as('./')
+    
         
 
 if __name__ == '__main__':

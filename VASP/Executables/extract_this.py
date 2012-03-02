@@ -140,6 +140,7 @@ def main():
                 results.append(incar.encut)
             elif argument == 'dos':
                 f = open('%s/dos.csv' % current_path, 'w')
+                f.write("%f\n" % doscar.fermi_level)
                 for line in doscar.dos:
                     f.write("%s,%s,%s\n" % (line[0], line[1], line[2]))
                 f.close()
