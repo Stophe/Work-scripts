@@ -22,6 +22,7 @@ class Poscar(object):
         self.path = path
         self.version = 0
         self.title = ""
+        self.counts = []
         self.formula_unit = 0
         self.a0 = 0
         self.a1 = array([0, 0, 0])
@@ -31,6 +32,13 @@ class Poscar(object):
         self._extract_data()
 
     def _extract_data(self):
+
+        def _int_list(lst):
+            new_list = []
+            for item in lst:
+                new_list.append(int(item))
+            return new_list
+
         line = getline("%s/POSCAR" % (self.path), 8).split()[0]
         if line[0] in ['K', 'k', 'C', 'c', 'D', 'd']:
             self.version = 5
@@ -64,10 +72,11 @@ class Poscar(object):
             counts = getline("%s/POSCAR" % (self.path), 7).split()
         else:
             counts = getline("%s/POSCAR" % (self.path), 6).split()
-        maximum = int(counts[0])
-        for count in counts:
-            if int(count) > maximum: maximum = int(count)
+        self.counts = _int_list(counts)
+        maximum = counts[0]
+        for count in self.counts:
+            if count > maximum: maximum = count
         self.formula_unit = maximum
             
         
-        clearcache()    
+        clearcache()

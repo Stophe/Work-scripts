@@ -16,7 +16,7 @@ def outcar_is_needed():
     """Checks if information from the OUTCAR is needed. Returns True if it is,
     no otherwise.
     """
-    possible_settings = ['total_cpu_time', 'volume']
+    possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -39,7 +39,8 @@ def poscar_is_needed():
     no otherwise.
     """
     possible_settings = ['title', 'formula_unit', 'surface_area',
-                         'lattice_constant', 'dos', 'all_energies']
+                         'lattice_constant', 'dos', 'all_energies',
+                         'dos_per_atom']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -72,7 +73,7 @@ def doscar_is_needed():
     """Checks if information from the INCAR is needed. Returns true if it is,
     no otherwise.
     """
-    possible_settings = ['dos']
+    possible_settings = ['dos', 'dos_per_atom']
     if set(possible_settings).intersection(set(sys.argv)):
         return True
     else:
@@ -144,6 +145,26 @@ def main():
                 for line in doscar.dos:
                     f.write("%s,%s,%s\n" % (line[0], line[1], line[2]))
                 f.close()
+            elif argument == 'dos_per_atom':
+                i = 0
+                line = 0
+                for count in poscar.counts:
+                    int_dos = [[0] * 3] * doscar.steps
+                    f = open('%s/dos%s.csv' % (current_path, outcar.atom_symbols[i]), 'w')
+                    dos_csv_file = writer(f, delimiter=',', quotechar='|',
+                                 quoting=QUOTE_MINIMAL)
+                    f.write("%s %i\n" % (outcar.atom_symbols[i], count))
+                    for atom in range(0, count):
+                        for energy in range(0, len(doscar.dos_per_atom[line + atom])):
+                            int_dos[energy] = [doscar.dos_per_atom[line + atom][energy][0],
+                                               int_dos[energy][1] + doscar.dos_per_atom[line + atom][energy][4],
+                                               int_dos[energy][2] + doscar.dos_per_atom[line + atom][energy][5]]
+                    for row in int_dos:
+                        dos_csv_file.writerow(row)
+                    f.close()
+                    line += count - 1
+                i += 1  # Choose correct symbol
+
         result_csv_file.writerow(results)
     rf.close()
 
