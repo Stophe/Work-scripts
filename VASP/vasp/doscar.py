@@ -46,7 +46,8 @@ class Doscar(object):
         for i in range(7, self.steps + 7):
             line = getline('%s/DOSCAR' % self.path, i).split()
             self.dos.append((line[0], line[1], line[2]))
-            if float(line[0]) > self.fermi_level:
+            if (float(line[0]) > self.fermi_level
+                and int(float(line[2])) == self.tot_nr_of_electrons):
                 self.tot_nr_of_electrons = int(float(line[2]))
                 j = 1
                 end_of_bandgap = 0
