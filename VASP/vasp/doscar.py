@@ -71,4 +71,5 @@ class Doscar(object):
                              tot + line[1] + line[2] + line[3]])
                 tot += line[1] + line[2] + line[3]
             self.dos_per_atom.append(temp)
+            last_line += self.steps + 1
             atoms -= 1
