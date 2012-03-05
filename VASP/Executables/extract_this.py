@@ -154,7 +154,7 @@ def main():
                     dos_csv_file = writer(f, delimiter=',', quotechar='|',
                                  quoting=QUOTE_MINIMAL)
                     f.write("%s %i\n" % (outcar.atom_symbols[i], count))
-                    for atom in range(0, count):
+                    for atom in range(line, line + count):
                         for energy in range(0, len(doscar.dos_per_atom[line + atom])):
                             int_dos[energy] = [doscar.dos_per_atom[line + atom][energy][0],
                                                int_dos[energy][1] + doscar.dos_per_atom[line + atom][energy][4],

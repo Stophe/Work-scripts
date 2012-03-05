@@ -69,10 +69,11 @@ class Doscar(object):
             for i in range(last_line + 1, last_line + 1 + self.steps):
                 line = getline('%s/DOSCAR' % self.path, i).split()
                 line = _float_list(line)
+                tot += line[1] + line[2] + line[3]
                 temp.append([line[0], line[1], line[2], line[3],
                              line[1] + line[2] + line[3],
-                             tot + line[1] + line[2] + line[3]])
-                tot += line[1] + line[2] + line[3]
+                             tot])
+
             self.dos_per_atom.append(temp)
             last_line += self.steps + 1
             atoms -= 1
