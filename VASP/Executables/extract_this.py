@@ -163,7 +163,7 @@ def main():
                         dos_csv_file.writerow(row)
                     f.close()
                     line += count - 1
-                i += 1  # Choose correct symbol
+                    i += 1  # Choose correct symbol
 
         result_csv_file.writerow(results)
     rf.close()
