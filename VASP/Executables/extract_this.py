@@ -155,14 +155,14 @@ def main():
                                  quoting=QUOTE_MINIMAL)
                     f.write("%s %i\n" % (outcar.atom_symbols[i], count))
                     for atom in range(line, line + count):
-                        for energy in range(0, len(doscar.dos_per_atom[line + atom])):
-                            int_dos[energy] = [doscar.dos_per_atom[line + atom][energy][0],
-                                               int_dos[energy][1] + doscar.dos_per_atom[line + atom][energy][4],
-                                               int_dos[energy][2] + doscar.dos_per_atom[line + atom][energy][5]]
+                        for energy in range(0, doscar.steps):
+                            int_dos[energy] = [doscar.dos_per_atom[atom][energy][0],
+                                               int_dos[energy][1] + doscar.dos_per_atom[atom][energy][4],
+                                               int_dos[energy][2] + doscar.dos_per_atom[atom][energy][5]]
                     for row in int_dos:
                         dos_csv_file.writerow(row)
                     f.close()
-                    line += count - 1
+                    line += count
                     i += 1  # Choose correct symbol
 
         result_csv_file.writerow(results)
