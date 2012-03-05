@@ -35,6 +35,8 @@ class Doscar(object):
                 new_list.append(float(item))
             return new_list
 
+        found = False
+
         self.tot_nr_of_atoms = int(getline('%s/DOSCAR' % self.path,
                                            1).split()[0])
         line = getline('%s/DOSCAR' % self.path, 6).split()
@@ -46,8 +48,7 @@ class Doscar(object):
         for i in range(7, self.steps + 7):
             line = getline('%s/DOSCAR' % self.path, i).split()
             self.dos.append((line[0], line[1], line[2]))
-            if (float(line[0]) > self.fermi_level
-                and int(float(line[2])) == self.tot_nr_of_electrons):
+            if float(line[0]) > self.fermi_level and not found:
                 self.tot_nr_of_electrons = int(float(line[2]))
                 j = 1
                 end_of_bandgap = 0
@@ -56,6 +57,7 @@ class Doscar(object):
                     if int(float(line[2])) != self.tot_nr_of_electrons:
                         self.fermi_level = ((end_of_bandgap - self.fermi_level)
                                             / 2. + self.fermi_level)
+                        found = True
                         break
                     end_of_bandgap = float(line[0])
                     j += 1
