@@ -39,27 +39,29 @@ class Doscar(object):
 
         self.tot_nr_of_atoms = int(getline('%s/DOSCAR' % self.path,
                                            1).split()[0])
-        line = getline('%s/DOSCAR' % self.path, 6).split()
-        self.max = float(line[0])
-        self.min = float(line[1])
+        line = _float_list(getline('%s/DOSCAR' % self.path, 6).split())
+        self.max = line[0]
+        self.min = line[1]
         self.steps = int(line[2])
-        self.fermi_level = float(line[3])
+        self.fermi_level = line[3]
         self.step_size = (self.max - self.min) / self.steps
         for i in range(7, self.steps + 7):
             line = getline('%s/DOSCAR' % self.path, i).split()
-            self.dos.append((line[0], line[1], line[2]))
-            if float(line[0]) > self.fermi_level and not found:
-                self.tot_nr_of_electrons = int(float(line[2]))
+            line = _float_list(line)
+            self.dos.append([line[0], line[1], line[2]])
+            if line[0] > self.fermi_level and not found:
+                self.tot_nr_of_electrons = int(line[2])
                 j = 1
                 end_of_bandgap = 0
                 while True:
                     line = getline('%s/DOSCAR' % self.path, i + j).split()
-                    if int(float(line[2])) != self.tot_nr_of_electrons:
+                    line = _float_list(line)
+                    if int(line[2]) != self.tot_nr_of_electrons:
                         self.fermi_level = ((end_of_bandgap - self.fermi_level)
                                             / 2. + self.fermi_level)
                         found = True
                         break
-                    end_of_bandgap = float(line[0])
+                    end_of_bandgap = line[0]
                     j += 1
         last_line = self.steps + 7
         atoms = self.tot_nr_of_atoms
@@ -73,7 +75,8 @@ class Doscar(object):
                 temp.append([line[0], line[1], line[2], line[3],
                              line[1] + line[2] + line[3],
                              tot])
-
+                #if atoms == self.tot_nr_of_atoms: print temp[-1]
             self.dos_per_atom.append(temp)
+            #if atoms == self.tot_nr_of_atoms: print self.dos_per_atom[-1][-1]
             last_line += self.steps + 1
             atoms -= 1

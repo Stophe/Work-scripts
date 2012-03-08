@@ -153,7 +153,7 @@ def main():
                     f = open('%s/dos%s.csv' % (current_path, outcar.atom_symbols[i]), 'w')
                     dos_csv_file = writer(f, delimiter=',', quotechar='|',
                                  quoting=QUOTE_MINIMAL)
-                    f.write("%s %i\n" % (outcar.atom_symbols[i], count))
+                    dos_csv_file.writerow([outcar.atom_symbols[i], count])
                     for atom in range(line, line + count):
                         for energy in range(0, doscar.steps):
                             int_dos[energy] = [doscar.dos_per_atom[atom][energy][0],
