@@ -54,7 +54,6 @@ class Doscar(object):
             line = _float_list(line)
             self.dos.append([line[0], line[1], line[2]])
             if line[2] == float(self.tot_nr_of_electrons):
-                print line
                 if first:
                     first = False
                     lower_bandgap = line[0]
