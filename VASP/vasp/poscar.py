@@ -77,6 +77,5 @@ class Poscar(object):
             if count > maximum:
                 maximum = count
         self.formula_unit = maximum
-        print self.formula_unit
 
         clearcache()
