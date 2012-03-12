@@ -4,6 +4,7 @@ Created on Feb 29, 2012
 @author: chtho
 '''
 from linecache import getline
+from vasp.outcar import Outcar
 
 
 class Doscar(object):
@@ -19,6 +20,7 @@ class Doscar(object):
         self.dos = []
         self.dos_per_atom = []
         self.fermi_level = 0.
+        self.bandgap = 0.
         self.max = 0.
         self.min = 0.
         self.steps = 0.
@@ -35,7 +37,9 @@ class Doscar(object):
                 new_list.append(float(item))
             return new_list
 
-        found = False
+        self.tot_nr_of_electrons = Outcar(self.path).tot_nr_of_electrons
+
+        first = True
 
         self.tot_nr_of_atoms = int(getline('%s/DOSCAR' % self.path,
                                            1).split()[0])
@@ -49,20 +53,15 @@ class Doscar(object):
             line = getline('%s/DOSCAR' % self.path, i).split()
             line = _float_list(line)
             self.dos.append([line[0], line[1], line[2]])
-            if line[0] > self.fermi_level and not found:
-                self.tot_nr_of_electrons = int(line[2])
-                j = 1
-                end_of_bandgap = 0
-                while True:
-                    line = getline('%s/DOSCAR' % self.path, i + j).split()
-                    line = _float_list(line)
-                    if int(line[2]) != self.tot_nr_of_electrons:
-                        self.fermi_level = ((end_of_bandgap - self.fermi_level)
-                                            / 2. + self.fermi_level)
-                        found = True
-                        break
-                    end_of_bandgap = line[0]
-                    j += 1
+            if line[2] == float(self.tot_nr_of_electrons):
+                print line
+                if first:
+                    first = False
+                    lower_bandgap = line[0]
+                end_of_bandgap = line[0]
+        self.bandgap = end_of_bandgap - lower_bandgap
+        self.fermi_level = ((end_of_bandgap - lower_bandgap)
+                            / 2. + lower_bandgap)
         last_line = self.steps + 7
         atoms = self.tot_nr_of_atoms
         while atoms:

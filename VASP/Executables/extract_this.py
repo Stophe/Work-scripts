@@ -73,7 +73,7 @@ def doscar_is_needed():
     """Checks if information from the INCAR is needed. Returns true if it is,
     no otherwise.
     """
-    possible_settings = ['dos', 'dos_per_atom']
+    possible_settings = ['dos', 'dos_per_atom', 'bandgap']
     if set(possible_settings).intersection(set(sys.argv)):
         return True
     else:
@@ -139,9 +139,11 @@ def main():
                 results.append(kpoints.mesh_type)
             elif argument == 'encut':
                 results.append(incar.encut)
+            elif argument == 'bandgap':
+                results.append(doscar.bandgap)
             elif argument == 'dos':
                 f = open('%s/dos.csv' % current_path, 'w')
-                f.write("%f\n" % doscar.fermi_level)
+                f.write("%f,%f\n" % (doscar.fermi_level, doscar.bandgap))
                 for line in doscar.dos:
                     f.write("%s,%s,%s\n" % (line[0], line[1], line[2]))
                 f.close()

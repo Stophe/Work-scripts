@@ -4,6 +4,7 @@ Created on Feb 27, 2012
 @author: chtho
 '''
 from numpy import array
+from numpy import asmatrix
 
 
 class PrimitiveCell(object):
@@ -15,13 +16,15 @@ class PrimitiveCell(object):
         """
         PrimitiveCell is the class for the primitive cell of the structure.
         """
-        self.matrix = array([a1, a2, a3])
+        self.matrix = asmatrix(array([a1, a2, a3]))
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
 
     def __repr__(self):
-        return ("  %f  %f  %f\n  %f  %f  %f\n  %f  %f  %f\n" %
-                (self.matrix[0][0], self.matrix[0][1], self.matrix[0][2],
-                 self.matrix[1][0], self.matrix[1][1], self.matrix[1][2],
-                 self.matrix[2][0], self.matrix[2][1], self.matrix[2][2]))
+        return ' ' + str(self.matrix).replace('[', '').replace(']',  '') + '\n'
+
+
+if __name__ == '__main__':
+    pc = PrimitiveCell(array([1, 0, 0]), array([0, 1, 0]), array([0, 0, 1]))
+    print pc
