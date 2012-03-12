@@ -34,10 +34,8 @@ class Poscar(object):
     def _extract_data(self):
 
         def _int_list(lst):
-            new_list = []
-            for item in lst:
-                new_list.append(int(item))
-            return new_list
+            for i in range(0, len(lst)):
+                lst[i] = int(lst[i])
 
         line = getline("%s/POSCAR" % (self.path), 8).split()[0]
         if line[0] in ['K', 'k', 'C', 'c', 'D', 'd']:
@@ -72,11 +70,13 @@ class Poscar(object):
             counts = getline("%s/POSCAR" % (self.path), 7).split()
         else:
             counts = getline("%s/POSCAR" % (self.path), 6).split()
-        self.counts = _int_list(counts)
+        _int_list(counts)
+        self.counts = counts
         maximum = counts[0]
         for count in self.counts:
-            if count > maximum: maximum = count
+            if count > maximum:
+                maximum = count
         self.formula_unit = maximum
-            
-        
+        print self.formula_unit
+
         clearcache()

@@ -162,29 +162,39 @@ class SuperCell:
         
         Takes an array as input
         """
+        print self.primitive_cell
+
+        
         new_supercell = deepcopy(self)
         self.expand_3D((3, 3, 3))
         self.transpose_basis((0.5, 0.5, 0.5))
         new_a3 = new_direction / self.a0
         new_a3_direct = self.convert_to_direct(new_a3)
+        
         origin_at = filter(lambda Atom: norm(Atom.position) == 0, self.atoms)[0]
         min_v = array([0, 0, 1])
         for atom in self.atoms:
-            if (len(cross(atom.position, new_a3_direct)) == 0 
+            if (dot(atom.position, new_a3_direct) == 0 
                 and atom.symbol == origin_at.symbol 
-                and norm(atom.position) != 0):
-                if norm(atom.position) < norm(min_v):
-                    min_v = atom.position
+                and norm(atom.position) != 0
+                and norm(atom.position) < norm(min_v)):
+                min_v = atom.position
         new_a2_direct = min_v
-        new_a2 = self.convert_to_real(min_v)
-        new_a1_direct = cross(new_a2_direct, new_a3_direct)
-        new_a1 = self.convert_to_real(new_a1_direct)
+        new_a2 = self.convert_to_real(min_v) * self.a0
         
-        print new_a1_direct, new_a2_direct, new_a3_direct
-        print new_a1, new_a2, new_a3
+        new_a1_direct = 2*cross(new_a2_direct, new_a3_direct)
+        for atom in self.atoms:
+            if (norm(cross(atom.position, new_a1_direct)) == 0 
+                and atom.symbol == origin_at.symbol 
+                and norm(atom.position) < norm(new_a1_direct)
+                and norm(atom.position) > 0):
+                new_a1_direct = atom.position
+        new_a1 = self.convert_to_real(new_a1_direct) * self.a0
+        
+
         new_supercell.primitive_cell = PrimitiveCell(new_a1, new_a2, new_a3)
-        print self.primitive_cell
         print new_supercell.primitive_cell
+        print new_supercell.a0
         
         
         
@@ -202,11 +212,11 @@ class SuperCell:
 def test():
     a0 = 4.2557
     ti = Atom('Ti',array([0.,0.,0.]))
-    n = Atom('N',array([0.5,0.5,0.5]))
+    #n = Atom('N',array([0.5,0.5,0.5]))
     primitive_cell = PrimitiveCell(array([0.,0.5,0.5]),array([0.5,0.,0.5]),array([0.5,0.5,0.]))
-    super_cell = SuperCell(a0,primitive_cell,[ti,n])
+    super_cell = SuperCell(a0,primitive_cell,[ti])
     #super_cell.expand_3D((0,0,4))
-    super_cell.change_surface(array([0 ,0, a0]))
+    super_cell.change_surface(array([0, 0, a0]))
 #    print super_cell.primitive_cell
 #    #super_cell.sort()
 #    for at in super_cell.atoms: print at
