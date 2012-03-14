@@ -44,7 +44,7 @@ class Poscar(object):
             self.version = 4
 
         # Extracts the title line of the POSCAR
-        self.title = getline("%s/POSCAR" % (self.path), 1)[:-1]
+        self.title = getline("%s/POSCAR" % (self.path), 1)[:-1].rstrip()
 
         # Extracts the lattice constant
         self.a0 = float(getline("%s/POSCAR" % (self.path), 2).split()[0])

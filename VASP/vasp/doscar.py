@@ -73,8 +73,6 @@ class Doscar(object):
                 temp.append([line[0], line[1], line[2], line[3],
                              line[1] + line[2] + line[3],
                              tot])
-                #if atoms == self.tot_nr_of_atoms: print temp[-1]
             self.dos_per_atom.append(temp)
-            #if atoms == self.tot_nr_of_atoms: print self.dos_per_atom[-1][-1]
             last_line += self.steps + 1
             atoms -= 1

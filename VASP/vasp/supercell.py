@@ -3,7 +3,6 @@
 from numpy import array
 from numpy import dot
 from numpy import cross
-from numpy import asarray
 from numpy import ravel
 from numpy.linalg import norm
 from numpy.linalg import inv
@@ -109,7 +108,7 @@ class SuperCell:
                 output = output + "%s %i " % (item, count[types.index(item)])
         return output
     
-    def save_as(self, path, file_type='poscar'):
+    def save_as(self, path, file_type='poscar', relaxation=False):
         if file_type == 'poscar':
             outfile = open(path + '/POSCAR', 'w')
             outfile.write(self.atom_counts('title'))
@@ -120,8 +119,10 @@ class SuperCell:
             outfile.write(self.atom_counts('numbers'))
             outfile.write("\nDirect\n")
             for atom in self.atoms:
-                s = str(atom).split()
-                outfile.write("  %s\t%s\t%s\n" % (s[1], s[2], s[3]))
+                if relaxation:
+                    print >>outfile, atom.str_with_relaxation()
+                else:
+                    print >>outfile, atom
             outfile.close()
         elif file_type == 'xyz':
             pass # Might be added later
@@ -269,7 +270,7 @@ def test():
 #    print super_cell.atom_counts('numbers')
 #    super_cell.center_positions()
 #    for at in super_cell.atoms: print at
-    new_supercell.save_as('/Users/chtho')
+    new_supercell.save_as('/Users/chtho', relaxation=False)
     
         
 
