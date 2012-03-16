@@ -14,7 +14,7 @@ from vasp.primitive_cell import PrimitiveCell
 
 class SuperCell:
 
-    def __init__(self, a0, pc, list_of_atoms):
+    def __init__(self, a0=0, pc=PrimitiveCell, list_of_atoms=[]):
         """
         SuperCell is initiated with a lattice parameter, primitive cell and
         a list of atoms for the basis.
@@ -108,15 +108,16 @@ class SuperCell:
                 output = output + "%s %i " % (item, count[types.index(item)])
         return output
     
-    def save_as(self, path, file_type='poscar', relaxation=False):
+    def save_structure(self, path, title, file_type='poscar', relaxation=False):
         if file_type == 'poscar':
             outfile = open(path + '/POSCAR', 'w')
-            outfile.write(self.atom_counts('title'))
+            outfile.write(title)
             outfile.write(' - %s\n' % datetime.now())
             outfile.write('%f\n' % self.a0)
             outfile.write(str(self.primitive_cell))
             outfile.write(self.atom_counts('letters'))
             outfile.write(self.atom_counts('numbers'))
+            if relaxation: outfile.write('\nSelective dynamics')
             outfile.write("\nDirect\n")
             for atom in self.atoms:
                 if relaxation:
@@ -270,7 +271,7 @@ def test():
 #    print super_cell.atom_counts('numbers')
 #    super_cell.center_positions()
 #    for at in super_cell.atoms: print at
-    new_supercell.save_as('/Users/chtho', relaxation=False)
+    new_supercell.save_structure('/Users/chtho', relaxation=False)
     
         
 
