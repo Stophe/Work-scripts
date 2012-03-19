@@ -91,10 +91,16 @@ class Contcar(object):
         for i in range(0, len(self.counts)):
             for j in range(pos_starting_line,
                               pos_starting_line + self.counts[i]):
-                position = _float_list(getline("%s/CONTCAR" % self.path,
-                                               j).split())
+                position = getline("%s/CONTCAR" % self.path, j).split()
+                if self.selective_dynamics:
+                    relax = position[3:5]
+                position = _float_list(position[:3])
                 position = array([position[0], position[1], position[2]])
-                self.supercell.add(self.symbols[i], position)
+                if self.selective_dynamics:
+                    self.supercell.add(self.symbols[i], position,
+                                       relaxation=relax)
+                else:
+                    self.supercell.add(self.symbols[i], position)
             pos_starting_line += self.counts[i]
 
         f.close()

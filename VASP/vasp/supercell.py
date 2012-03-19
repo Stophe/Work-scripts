@@ -28,8 +28,8 @@ class SuperCell:
     def __repr__(self):
         return self.atoms
 
-    def add(self, symbol, position):
-        self.atoms.append(Atom(symbol, position))
+    def add(self, symbol, position, relaxation=['T', 'T', 'T']):
+        self.atoms.append(Atom(symbol, position, relaxation))
 
     def expand_3D(self, times):
         """
