@@ -5,6 +5,8 @@ Created on Mar 15, 2012
 '''
 from linecache import getline
 from numpy import array
+from numpy import cross
+from numpy.linalg import norm
 
 from vasp.supercell import SuperCell
 from vasp.primitive_cell import PrimitiveCell
@@ -25,8 +27,10 @@ class Contcar(object):
         self.selective_dynamics = False
         self.direct_coords = False
         self.counts = []
+        self.formula_unit = 0
         self.symbols = []
         self.supercell = SuperCell()
+        self.surface_area = 0
         self._extract_data()
 
     def _extract_data(self):
@@ -52,6 +56,12 @@ class Contcar(object):
             self.symbols = getline("%s/CONTCAR" % self.path, 6).split()
             self.counts = _int_list(getline("%s/CONTCAR" % self.path, 7).split())
 
+        maximum = self.counts[0]
+        for count in self.counts:
+            if count > maximum:
+                maximum = count
+        self.formula_unit = maximum
+
         pos_starting_line = 0
 
         if self.version >= 5:
@@ -75,6 +85,7 @@ class Contcar(object):
         a2 = array([a2[0], a2[1], a2[2]])
         a3 = _float_list(getline("%s/CONTCAR" % self.path, 5).split())
         a3 = array([a3[0], a3[1], a3[2]])
+        self.surface_area = self.supercell.a0 * 2 * norm(cross(a1, a2))
         self.supercell.primitive_cell = PrimitiveCell(a1, a2, a3)
         f = open("%s/CONTCAR" % self.path)
         for i in range(0, len(self.counts)):
@@ -100,4 +111,3 @@ if __name__ == '__main__':
     print contcar.supercell.primitive_cell
     for atom in contcar.supercell.atoms:
         print atom
-

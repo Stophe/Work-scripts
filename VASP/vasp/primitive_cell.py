@@ -17,10 +17,10 @@ class PrimitiveCell(object):
         """
         PrimitiveCell is the class for the primitive cell of the structure.
         """
-        self.matrix = asmatrix(array([a1, a2, a3]))
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
+        self.matrix = asmatrix(array([self.a1, self.a2, self.a3]))
 
     def __repr__(self):
         l1 = "  %3.9f  %3.9f  %3.9f\n" %\

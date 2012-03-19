@@ -3,10 +3,12 @@ from os import getcwd, system
 from os.path import isdir
 import sys
 from csv import writer, QUOTE_MINIMAL
+
 from vasp.find import Find
 from vasp.outcar import Outcar
 from vasp.oszicar import Oszicar
 from vasp.poscar import Poscar
+from vasp.contcar import Contcar
 from vasp.kpoints import Kpoints
 from vasp.incar import Incar
 from vasp.doscar import Doscar
@@ -38,8 +40,19 @@ def poscar_is_needed():
     """Checks if information from the POSCAR is needed. Returns True if it is,
     no otherwise.
     """
+    possible_settings = ['old_title', 'old_formula_unit', 'old_surface_area',
+                         'old_lattice_constant', 'old_all_energies']
+    if len(set(possible_settings).intersection(set(sys.argv))) > 0:
+        return True
+    else:
+        return False
+
+def contcar_is_needed():
+    """Checks if information from the POSCAR is needed. Returns True if it is,
+    no otherwise.
+    """
     possible_settings = ['title', 'formula_unit', 'surface_area',
-                         'lattice_constant', 'dos', 'all_energies',
+                         'lattice_constant', 'all_energies',
                          'dos_per_atom']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
@@ -105,6 +118,7 @@ def main():
         if outcar_is_needed(): outcar = Outcar(path)
         if oszicar_is_needed(): oszicar = Oszicar(path)
         if poscar_is_needed(): poscar = Poscar(path)
+        if contcar_is_needed(): contcar = Contcar(path)
         if kpoints_is_needed(): kpoints = Kpoints(path)
         if incar_is_needed(): incar = Incar(path)
         if doscar_is_needed(): doscar = Doscar(path)
@@ -115,16 +129,16 @@ def main():
         for argument in sys.argv:
             if argument == 'title':
                 col_titles.append('Title')
-                results.append(poscar.title)
+                results.append(contcar.title)
             elif argument == 'lattice_constant':
                 col_titles.append('a0 [Ang]')
-                results.append(poscar.a0)
+                results.append(contcar.supercell.a0)
             elif argument == 'surface_area':
                 col_titles.append('Surface Area [Ang^2]')
-                results.append(poscar.surface_area)
+                results.append(contcar.surface_area)
             elif argument == 'formula_unit':
                 col_titles.append('Formula unit')
-                results.append(poscar.formula_unit)
+                results.append(contcar.formula_unit)
             elif argument == 'total_energy':
                 col_titles.append('Total Energy [eV]')
                 results.append(oszicar.total_energy)
@@ -132,7 +146,7 @@ def main():
                 f = open('%s/all_energies.csv' % current_path, 'wb')
                 energy_csv_file = writer(f, delimiter=',', quotechar='|',
                                  quoting=QUOTE_MINIMAL)
-                energy_csv_file.writerow([poscar.title] + oszicar.all_energies)
+                energy_csv_file.writerow([contcar.title] + oszicar.all_energies)
                 f.close()
             elif argument == 'total_cpu_time':
                 col_titles.append('Total CPU time')
@@ -166,7 +180,7 @@ def main():
             elif argument == 'dos_per_atom':
                 i = 0
                 line = 0
-                for count in poscar.counts:
+                for count in contcar.counts:
                     int_dos = [[0] * 3] * doscar.steps
                     f = open('%s/dos%s.csv' % (current_path, outcar.atom_symbols[i]), 'w')
                     dos_csv_file = writer(f, delimiter=',', quotechar='|',
