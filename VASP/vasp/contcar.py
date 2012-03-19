@@ -31,7 +31,10 @@ class Contcar(object):
         self.symbols = []
         self.supercell = SuperCell()
         self.surface_area = 0
-        self._extract_data()
+        try:
+            self._extract_data()
+        except:
+            print "Error with CONTCAR in: %s\n" % self.path
 
     def _extract_data(self):
 

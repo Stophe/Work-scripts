@@ -27,7 +27,10 @@ class Doscar(object):
         self.step_size = 0.
         self.tot_nr_of_electrons = 0
         self.tot_nr_of_atoms = 0
-        self._extract_data()
+        try:
+            self._extract_data()
+        except:
+            print "Error with DOSCAR in: %s\n" % self.path
 
     def _extract_data(self):
 

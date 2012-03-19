@@ -113,6 +113,8 @@ def main():
     result_csv_file = writer(rf, delimiter=',', quotechar='|',
                              quoting=QUOTE_MINIMAL)
 
+    written_header = False
+
     find = Find(current_path, 'OUTCAR')
     for path in find.paths:
         if outcar_is_needed(): outcar = Outcar(path)
@@ -128,19 +130,24 @@ def main():
         
         for argument in sys.argv:
             if argument == 'title':
-                col_titles.append('Title')
+                if 'Title' not in col_titles:
+                    col_titles.append('Title')
                 results.append(contcar.title)
             elif argument == 'lattice_constant':
-                col_titles.append('a0 [Ang]')
+                if 'a0 [Ang]' not in col_titles:
+                    col_titles.append('a0 [Ang]')
                 results.append(contcar.supercell.a0)
             elif argument == 'surface_area':
-                col_titles.append('Surface Area [Ang^2]')
+                if 'Surface Area [Ang^2]' not in col_titles:
+                    col_titles.append('Surface Area [Ang^2]')
                 results.append(contcar.surface_area)
             elif argument == 'formula_unit':
-                col_titles.append('Formula unit')
+                if 'Formula unit' not in col_titles:
+                    col_titles.append('Formula unit')
                 results.append(contcar.formula_unit)
             elif argument == 'total_energy':
-                col_titles.append('Total Energy [eV]')
+                if 'Total Energy [eV]' not in col_titles:
+                    col_titles.append('Total Energy [eV]')
                 results.append(oszicar.total_energy)
             elif argument == 'all_energies':
                 f = open('%s/all_energies.csv' % current_path, 'wb')
@@ -149,25 +156,32 @@ def main():
                 energy_csv_file.writerow([contcar.title] + oszicar.all_energies)
                 f.close()
             elif argument == 'total_cpu_time':
-                col_titles.append('Total CPU time')
+                if 'Total CPU time' not in col_titles:
+                    col_titles.append('Total CPU time')
                 results.append(outcar.total_cpu_time)
             elif argument == 'volume':
-                col_titles.append('Volume [Ang^3]')
+                if 'Volume [Ang^3]' not in col_titles:
+                    col_titles.append('Volume [Ang^3]')
                 results.append(outcar.volume)
             elif argument == 'kpoints':
-                col_titles.append('K-points')
+                if 'K-points' not in col_titles:
+                    col_titles.append('K-points')
                 results.append(kpoints)
             elif argument == 'total_kpoints':
-                col_titles.append('Total K-points')
+                if 'Total K-points' not in col_titles:
+                    col_titles.append('Total K-points')
                 results.append(kpoints.total_kpoints)
             elif argument == 'kpoint_type':
-                col_titles.append('K-mesh type')
+                if 'K-mesh type' not in col_titles:
+                    col_titles.append('K-mesh type')
                 results.append(kpoints.mesh_type)
             elif argument == 'encut':
-                col_titles.append('ENCUT')
+                if 'ENCUT' not in col_titles:
+                    col_titles.append('ENCUT')
                 results.append(incar.encut)
             elif argument == 'bandgap':
-                col_titles.append('Bandgap [eV]')
+                if 'Bandgap [eV]' not in col_titles:
+                    col_titles.append('Bandgap [eV]')
                 results.append(doscar.bandgap)
             elif argument == 'dos':
                 f = open('%s/dos.csv' % current_path, 'w')
@@ -199,7 +213,9 @@ def main():
                     line += count
                     i += 1  # Choose correct symbol
 
-        result_csv_file.writerow(col_titles)
+        if not written_header:
+            result_csv_file.writerow(col_titles)
+            written_header = True
         result_csv_file.writerow(results)
     rf.close()
 
