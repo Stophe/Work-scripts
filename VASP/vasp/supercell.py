@@ -65,10 +65,10 @@ class SuperCell:
                           reverse=True)
         self.atoms = new_list
 
-    def convert_atom_on_surface(self,from_symbol, to_symbol):
+    def convert_atom_on_surface(self, from_symbol, to_symbol):
         for atom in self.atoms:
             if (atom.symbol == from_symbol and 
-                atom.position[2] == self.get_highest_position(2)):
+                atom.position[2] == self.get_highest_position(2, symbol=from_symbol)):
                 atom.symbol = to_symbol
                 break
         self.sort()
@@ -109,7 +109,7 @@ class SuperCell:
         return output
     
     def save_structure(self, path, title, file_type='poscar', relaxation=False):
-        if file_type == 'poscar':
+        if file_type in ['poscar', 'POSCAR']:
             outfile = open(path + '/POSCAR', 'w')
             outfile.write(title)
             outfile.write(' - %s\n' % datetime.now())
@@ -129,12 +129,20 @@ class SuperCell:
             pass # Might be added later
 
 
-    def get_highest_position(self, direction=2): # Return highest value in one direction in direct coordinates
-        highest = self.atoms[0].position[direction]
-        for atom in self.atoms:
-            if atom.position[direction] > highest:
-                highest = atom.position[direction]
-        return highest
+    def get_highest_position(self, direction=2, symbol='Any'): # Return highest value in one direction in direct coordinates
+        if symbol == 'Any':
+            highest = self.atoms[0].position[direction]
+            for atom in self.atoms:
+                if atom.position[direction] > highest:
+                    highest = atom.position[direction]
+            return highest
+        else:
+            highest = self.atoms[0].position[direction]
+            for atom in self.atoms:
+                if atom.position[direction] > highest and atom.symbol == symbol:
+                    highest = atom.position[direction]
+            return highest
+            
 
     def get_lowest_position(self, direction=2): # Return lowest value in one direction in direct coordinates
         lowest = self.atoms[0].position[direction]

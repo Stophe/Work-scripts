@@ -47,6 +47,7 @@ def poscar_is_needed():
     else:
         return False
 
+
 def contcar_is_needed():
     """Checks if information from the POSCAR is needed. Returns True if it is,
     no otherwise.

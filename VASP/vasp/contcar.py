@@ -81,7 +81,7 @@ class Contcar(object):
                 pos_starting_line = 9
 
         self.title = getline("%s/CONTCAR" % self.path, 1).rstrip()
-        self.supercell.a0 = float(getline("%s/CONTCAR" % self.path, 2))
+        self.supercell.a0 = float(getline("%s/CONTCAR" % self.path, 2).split()[0])
         a1 = _float_list(getline("%s/CONTCAR" % self.path, 3).split())
         a1 = array([a1[0], a1[1], a1[2]])
         a2 = _float_list(getline("%s/CONTCAR" % self.path, 4).split())
@@ -96,7 +96,7 @@ class Contcar(object):
                               pos_starting_line + self.counts[i]):
                 position = getline("%s/CONTCAR" % self.path, j).split()
                 if self.selective_dynamics:
-                    relax = position[3:5]
+                    relax = position[3:6]
                 position = _float_list(position[:3])
                 position = array([position[0], position[1], position[2]])
                 if self.selective_dynamics:
@@ -109,7 +109,7 @@ class Contcar(object):
         f.close()
 
 if __name__ == '__main__':
-    contcar = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")
+    contcar = Contcar("/Users/chtho/Dropbox/Shared/TiN/001/Layer_test_2x2xL/2x2x2")
     print contcar.path
     print contcar.version
     print contcar.title
@@ -119,4 +119,4 @@ if __name__ == '__main__':
     print contcar.symbols
     print contcar.supercell.primitive_cell
     for atom in contcar.supercell.atoms:
-        print atom
+        print atom, atom.relaxation
