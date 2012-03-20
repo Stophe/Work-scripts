@@ -70,12 +70,20 @@ class Poscar(object):
                 if  getline("%s/POSCAR" % self.path, 9)[0] in ['D', 'd']:
                     self.direct_coords = True
                 pos_starting_line = 10
+            else:
+                if  getline("%s/POSCAR" % self.path, 8)[0] in ['D', 'd']:
+                    self.direct_coords = True
+                pos_starting_line = 9
         else:
             if getline("%s/POSCAR" % self.path, 7)[0] in ['s', 'S']:
                 self.selective_dynamics = True
                 if  getline("%s/POSCAR" % self.path, 8)[0] in ['D', 'd']:
                     self.direct_coords = True
                 pos_starting_line = 9
+            else:
+                if  getline("%s/POSCAR" % self.path, 7)[0] in ['D', 'd']:
+                    self.direct_coords = True
+                pos_starting_line = 6
 
         self.title = getline("%s/POSCAR" % self.path, 1).rstrip()
         self.supercell.a0 = float(getline("%s/POSCAR" % self.path, 2))
