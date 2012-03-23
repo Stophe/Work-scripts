@@ -96,7 +96,7 @@ class Contcar(object):
         a2 = array([a2[0], a2[1], a2[2]])
         a3 = _float_list(getline("%s/CONTCAR" % self.path, 5).split())
         a3 = array([a3[0], a3[1], a3[2]])
-        self.surface_area = self.supercell.a0 * 2 * norm(cross(a1, a2))
+        self.surface_area = self.supercell.a0 * norm(cross(a1, a2))
         self.supercell.primitive_cell = PrimitiveCell(a1, a2, a3)
         f = open("%s/CONTCAR" % self.path)
         for i in range(0, len(self.counts)):
