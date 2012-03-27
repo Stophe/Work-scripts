@@ -28,6 +28,9 @@ class SuperCell:
     def __repr__(self):
         return self.atoms
 
+    def copy(self):
+        return deepcopy(self)
+
     def add(self, symbol, position, relaxation=['T', 'T', 'T']):
         self.atoms.append(Atom(symbol, position, relaxation))
 
@@ -68,7 +71,8 @@ class SuperCell:
     def convert_atom_on_surface(self, from_symbol, to_symbol):
         for atom in self.atoms:
             if (atom.symbol == from_symbol and 
-                atom.position[2] == self.get_highest_position(2, symbol=from_symbol)):
+                atom.position[2] == self.get_highest_position(2, 
+                                                              symbol=from_symbol)):
                 atom.symbol = to_symbol
                 break
         self.sort()
@@ -129,7 +133,10 @@ class SuperCell:
             pass # Might be added later
 
 
-    def get_highest_position(self, direction=2, symbol='Any'): # Return highest value in one direction in direct coordinates
+    def get_highest_position(self, direction=2, symbol='Any'):
+        """
+        Returns highest value in one direction in direct coordinates
+        """
         if symbol == 'Any':
             highest = self.atoms[0].position[direction]
             for atom in self.atoms:
