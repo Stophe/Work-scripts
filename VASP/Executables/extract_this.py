@@ -18,7 +18,8 @@ def outcar_is_needed():
     """Checks if information from the OUTCAR is needed. Returns True if it is,
     no otherwise.
     """
-    possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom']
+    possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom', 'encut',
+                         'kpoints', 'total_kpoints']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -65,18 +66,7 @@ def kpoints_is_needed():
     """Checks if information from the KPOINTS is needed. Returns True if it is,
     no otherwise.
     """
-    possible_settings = ['kpoints', 'kpoint_type', 'total_kpoints']
-    if set(possible_settings).intersection(set(sys.argv)):
-        return True
-    else:
-        return False
-
-
-def incar_is_needed():
-    """Checks if information from the INCAR is needed. Returns true if it is,
-    no otherwise.
-    """
-    possible_settings = ['encut']
+    possible_settings = ['kpoint_type']
     if set(possible_settings).intersection(set(sys.argv)):
         return True
     else:
@@ -123,7 +113,6 @@ def main():
         if poscar_is_needed(): poscar = Poscar(path)
         if contcar_is_needed(): contcar = Contcar(path)
         if kpoints_is_needed(): kpoints = Kpoints(path)
-        if incar_is_needed(): incar = Incar(path)
         if doscar_is_needed(): doscar = Doscar(path)
         
         results = []
@@ -134,56 +123,74 @@ def main():
                 if 'Title' not in col_titles:
                     col_titles.append('Title')
                 results.append(contcar.title)
+            
             elif argument == 'lattice_constant':
                 if 'a0 [Ang]' not in col_titles:
                     col_titles.append('a0 [Ang]')
                 results.append(contcar.supercell.a0)
+            
             elif argument == 'surface_area':
                 if 'Surface Area [Ang^2]' not in col_titles:
                     col_titles.append('Surface Area [Ang^2]')
                 results.append(contcar.surface_area)
+            
             elif argument == 'formula_unit':
                 if 'Formula unit' not in col_titles:
                     col_titles.append('Formula unit')
                 results.append(contcar.formula_unit)
+            
             elif argument == 'total_energy':
                 if 'Total Energy [eV]' not in col_titles:
                     col_titles.append('Total Energy [eV]')
                 results.append(oszicar.total_energy)
+            
             elif argument == 'all_energies':
                 f = open('%s/all_energies.csv' % current_path, 'wb')
                 energy_csv_file = writer(f, delimiter=',', quotechar='|',
                                  quoting=QUOTE_MINIMAL)
                 energy_csv_file.writerow([contcar.title] + oszicar.all_energies)
                 f.close()
+            
             elif argument == 'total_cpu_time':
                 if 'Total CPU time' not in col_titles:
                     col_titles.append('Total CPU time')
                 results.append(outcar.total_cpu_time)
+            
             elif argument == 'volume':
                 if 'Volume [Ang^3]' not in col_titles:
                     col_titles.append('Volume [Ang^3]')
                 results.append(outcar.volume)
+            
             elif argument == 'kpoints':
                 if 'K-points' not in col_titles:
                     col_titles.append('K-points')
-                results.append(kpoints)
+                results.append("%ix%ix%i" % outcar.kpoints)
+            
             elif argument == 'total_kpoints':
                 if 'Total K-points' not in col_titles:
                     col_titles.append('Total K-points')
-                results.append(kpoints.total_kpoints)
+                results.append(outcar.total_kpoints)
+
+            elif argument == 'nkpts':
+                if 'Total K-points' not in col_titles:
+                    col_titles.append('NKPTS')
+                results.append(outcar.nkpts)
+            
             elif argument == 'kpoint_type':
                 if 'K-mesh type' not in col_titles:
                     col_titles.append('K-mesh type')
                 results.append(kpoints.mesh_type)
+            
             elif argument == 'encut':
                 if 'ENCUT' not in col_titles:
                     col_titles.append('ENCUT')
-                results.append(incar.encut)
+                results.append(outcar.encut)
+            
             elif argument == 'bandgap':
                 if 'Bandgap [eV]' not in col_titles:
                     col_titles.append('Bandgap [eV]')
                 results.append(doscar.bandgap)
+            
             elif argument == 'dos':
                 f = open('%s/dos.csv' % current_path, 'w')
                 f.write("Fermi level,Bandgap\n")
@@ -192,6 +199,7 @@ def main():
                 for line in doscar.dos:
                     f.write("%s,%s,%s\n" % (line[0], line[1], line[2]))
                 f.close()
+            
             elif argument == 'dos_per_atom':
                 i = 0
                 line = 0
