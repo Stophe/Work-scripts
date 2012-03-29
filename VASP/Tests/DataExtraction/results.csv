@@ -1,3 +1,6 @@
-0
-400
-500
+K-points,K-mesh type,Total K-points,Title,Formula unit,Total Energy [eV],Total CPU time,ENCUT,Surface Area [Ang^2]
+21x21x5,Monkhorst,47,,0,-57.601252,417.698,400.0,0
+3x3x3,Monkhorst,9,,0,-57.601252,1141.407,400.0,0
+21x21x5,Monkhorst,47,,0,-57.601252,0,400.0,0
+21x21x21,Monkhorst,63,w-AlN DOS,2,-29.779921,127.288,400.0,2.7098537719
+7x7x3,Monkhorst,17,TiNAl 2x2x3 K7x7x3- 2012-02-24 08:39:03.,24,-460.44971,1324.547,400.0,8.5114
