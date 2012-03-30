@@ -33,6 +33,7 @@ class SuperCell:
 
     def add(self, symbol, position, relaxation=['T', 'T', 'T']):
         self.atoms.append(Atom(symbol, position, relaxation))
+        self.sort()
 
     def expand_3D(self, times):
         """

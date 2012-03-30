@@ -46,11 +46,14 @@ class Incar(object):
                 self.encut = line.split('=')[1][:-1]
 
     def create_file(self):
+        lst = []
         f = open("%s/INCAR" % self.path, 'w')
         for attribute in self.__dict__:
             if self.__dict__[attribute] != None and attribute != 'path':
-                f.write("%s=%s\n" % (attribute.upper(),
-                                    self.__dict__[attribute]))
+                lst.append([attribute.upper(), self.__dict__[attribute]])
+        lst.sort(reverse=True)
+        for item in lst:
+            f.write("%s=%s\n" % (item[0], item[1]))
         f.close()
 
 if __name__ == '__main__':

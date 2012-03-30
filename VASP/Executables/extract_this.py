@@ -175,12 +175,12 @@ def main():
                 if 'Total K-points' not in col_titles:
                     col_titles.append('NKPTS')
                 results.append(outcar.nkpts)
-            
+
             elif argument == 'kpoint_type':
                 if 'K-mesh type' not in col_titles:
                     col_titles.append('K-mesh type')
                 results.append(kpoints.mesh_type)
-            
+
             elif argument == 'encut':
                 if 'ENCUT' not in col_titles:
                     col_titles.append('ENCUT')
