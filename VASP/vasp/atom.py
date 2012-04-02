@@ -12,7 +12,7 @@ class Atom(object):
     '''
 
     def __init__(self, symbol, array=array([0., 0., 0.]),
-                 relaxation=['T', 'T', 'T']):
+                 relaxation=['T', 'T', 'T'], addatom=False):
         """
         Atom initiates with an atomic symbol and position array given in
         direct coordinates.
@@ -25,6 +25,7 @@ class Atom(object):
             self.symbol = symbol
         self.position = array
         self.relaxation = relaxation
+        self.addatom = addatom
 
     def __repr__(self):
         return "%s  %.9f  %.9f  %.9f" % (self.symbol, self.position[0],

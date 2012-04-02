@@ -31,7 +31,7 @@ class Incar(object):
         self.ibrion = ibrion
         self.isif = isif
         self.ispin = ispin
-        self.magmom = magmom
+        self.magmom = magmom # Number of atoms * magnetic moment
         self.lwave = lwave
         self.lcharge = lcharge
         self.lorbit = lorbit

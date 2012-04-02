@@ -49,7 +49,7 @@ class Run(object):
         f.write("module add vasp/%s\n" % self.vasp_version)
         f.write('\n')
         f.write("#Run calculation\n")
-        f.write("aprun -n %i /pdc/vol/vasp/%s/vasp\n" % (self.nodes,
+        f.write("aprun -n %i /pdc/vol/vasp/%s/vasp > temp.out\n" % (self.nodes,
                                                          self.vasp_version))
         f.close()
 
