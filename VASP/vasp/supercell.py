@@ -31,8 +31,8 @@ class SuperCell:
     def copy(self):
         return deepcopy(self)
 
-    def add(self, symbol, position, relaxation=['T', 'T', 'T'], addatom=False):
-        self.atoms.append(Atom(symbol, position, relaxation, addatom))
+    def add(self, symbol, position, relaxation=['T', 'T', 'T'], adatom=False):
+        self.atoms.append(Atom(symbol, position, relaxation, adatom))
 
     def expand_3D(self, times):
         """
@@ -92,7 +92,7 @@ class SuperCell:
         count = []
         output = ""
         for atom in self.atoms:
-            if atom.symbol not in types or atom.addatom:
+            if atom.symbol not in types or atom.adatom:
                 types.append(atom.symbol)
                 count.append(1)
             else:

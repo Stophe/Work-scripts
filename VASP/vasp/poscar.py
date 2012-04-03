@@ -46,6 +46,17 @@ class Poscar(object):
             for item in lst:
                 new_lst.append(int(item))
             return new_lst
+        
+        def _count_adatoms():
+            temp = []
+            count = 0
+            for i in range(0, len(self.symbols)):
+                if self.symbols[i] not in temp:
+                    temp.append(self.symbols[i])
+                else:
+                    count += self.counts[i]
+            return count
+            
 
         if getline("%s/POSCAR" % self.path, 6).strip().isdigit():
             self.version = 4
@@ -62,6 +73,7 @@ class Poscar(object):
                 maximum = count
         self.formula_unit = maximum
 
+        nr_of_adatoms = _count_adatoms()
         pos_starting_line = 0
 
         if self.version >= 5:
@@ -99,11 +111,20 @@ class Poscar(object):
         for i in range(0, len(self.counts)):
             for j in range(pos_starting_line,
                               pos_starting_line + self.counts[i]):
-                position = _float_list(getline("%s/POSCAR" % self.path,
-                                               j).split())
+                position = getline("%s/POSCAR" % self.path, j).split()
+                if self.selective_dynamics:
+                    relax = position[3:6]
+                position = _float_list(position[:3])
                 position = array([position[0], position[1], position[2]])
-                self.supercell.add(self.symbols[i], position)
+                if self.selective_dynamics:
+                    self.supercell.add(self.symbols[i], position,
+                                       relaxation=relax)
+                else:
+                    self.supercell.add(self.symbols[i], position)
             pos_starting_line += self.counts[i]
+        # Mark adatoms
+        for i in range(1, 1 + nr_of_adatoms):
+            self.supercell.atoms[-i].adatom = True
 
         f.close()
 
@@ -118,4 +139,10 @@ if __name__ == '__main__':
     print poscar.symbols
     print poscar.supercell.primitive_cell
     for atom in poscar.supercell.atoms:
-        print atom
+        print atom.adatom
+    poscar2 = Poscar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex6")
+    print poscar2.symbols
+    print poscar2.counts
+    for atom in poscar2.supercell.atoms:
+        if atom.adatom:
+            print atom

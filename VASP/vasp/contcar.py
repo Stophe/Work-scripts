@@ -50,6 +50,16 @@ class Contcar(object):
                 new_lst.append(int(item))
             return new_lst
 
+        def _count_adatoms():
+            temp = []
+            count = 0
+            for i in range(0, len(self.symbols)):
+                if self.symbols[i] not in temp:
+                    temp.append(self.symbols[i])
+                else:
+                    count += self.counts[i]
+            return count
+
         if getline("%s/CONTCAR" % self.path, 6).strip().isdigit():
             self.version = 4
             self.counts = _int_list(getline("%s/CONTCAR" % self.path, 6).split())
@@ -65,6 +75,7 @@ class Contcar(object):
                 maximum = count
         self.formula_unit = maximum
 
+        nr_of_adatoms = _count_adatoms()
         pos_starting_line = 0
 
         if self.version >= 5:
@@ -113,11 +124,14 @@ class Contcar(object):
                 else:
                     self.supercell.add(self.symbols[i], position)
             pos_starting_line += self.counts[i]
+        # Mark adatoms
+        for i in range(1, 1 + nr_of_adatoms):
+            self.supercell.atoms[-i].adatom = True
 
         f.close()
 
 if __name__ == '__main__':
-    contcar = Contcar("/Users/chtho/Dropbox/Shared/TiN/001/Layer_test_2x2xL/2x2x2")
+    contcar = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")
     print contcar.path
     print contcar.version
     print contcar.title
@@ -128,3 +142,9 @@ if __name__ == '__main__':
     print contcar.supercell.primitive_cell
     for atom in contcar.supercell.atoms:
         print atom, atom.relaxation
+    contcar2 = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex6")
+    print contcar2.symbols
+    print contcar2.counts
+    for atom in contcar2.supercell.atoms:
+        if atom.adatom:
+            print atom

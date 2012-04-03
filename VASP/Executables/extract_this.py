@@ -10,7 +10,6 @@ from vasp.oszicar import Oszicar
 from vasp.poscar import Poscar
 from vasp.contcar import Contcar
 from vasp.kpoints import Kpoints
-from vasp.incar import Incar
 from vasp.doscar import Doscar
 
 
@@ -42,7 +41,7 @@ def poscar_is_needed():
     no otherwise.
     """
     possible_settings = ['old_title', 'old_formula_unit', 'old_surface_area',
-                         'old_lattice_constant', 'old_all_energies']
+                         'old_lattice_constant', 'old_all_energies', 'old_adatom_pos']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -55,7 +54,7 @@ def contcar_is_needed():
     """
     possible_settings = ['title', 'formula_unit', 'surface_area',
                          'lattice_constant', 'all_energies',
-                         'dos_per_atom']
+                         'dos_per_atom', 'adatom_pos']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -138,6 +137,22 @@ def main():
                 if 'Formula unit' not in col_titles:
                     col_titles.append('Formula unit')
                 results.append(contcar.formula_unit)
+            
+            elif argument == 'adatom_pos':
+                if 'adatom_pos' not in col_titles:
+                    col_titles += ['adatom x', 'adatom y', 'adatom z']
+                for atom in contcar.supercell.atoms:
+                    if atom.adatom:
+                        results += list(atom.position)
+                        break
+
+            elif argument == 'old_adatom_pos':
+                if 'old_adatom_pos' not in col_titles:
+                    col_titles += ['old-adatom x', 'old-adatom y', 'old-adatom z']
+                for atom in poscar.supercell.atoms:
+                    if atom.adatom:
+                        results += list(atom.position)
+                        break
             
             elif argument == 'total_energy':
                 if 'Total Energy [eV]' not in col_titles:
