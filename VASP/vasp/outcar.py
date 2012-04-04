@@ -15,6 +15,7 @@ class Outcar(object):
         Constructor
         '''
         self.path = path
+        self.nodes = 0
         self.atom_symbols = []
         self.tot_nr_of_electrons = 0
         self.total_cpu_time = 0
@@ -29,7 +30,9 @@ class Outcar(object):
         # Extracts the data from the OUTCAR file
         f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
-            if 'VRHFIN' in line:
+            if 'running on' in line:
+                self.nodes = int(line.split()[2])
+            elif 'VRHFIN' in line:
                 line = line.split()[1]
                 self.atom_symbols.append(line[1:-1])
             elif 'NELECT' in line:

@@ -18,7 +18,7 @@ def outcar_is_needed():
     no otherwise.
     """
     possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom', 'encut',
-                         'kpoints', 'total_kpoints']
+                         'kpoints', 'total_kpoints', 'nodes']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -166,6 +166,11 @@ def main():
                 energy_csv_file.writerow([contcar.title] + oszicar.all_energies)
                 f.close()
             
+            elif argument == 'nodes':
+                if 'Nodes' not in col_titles:
+                    col_titles.append('Nodes')
+                results.append(outcar.nodes)
+                
             elif argument == 'total_cpu_time':
                 if 'Total CPU time' not in col_titles:
                     col_titles.append('Total CPU time')
