@@ -29,7 +29,7 @@ def oszicar_is_needed():
     """Checks if information from the OSZICAR is needed. Returns True if it is,
     no otherwise.
     """
-    possible_settings = ['total_energy', 'all_energies']
+    possible_settings = ['total_energy', 'all_energies', 'magmom']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -158,6 +158,11 @@ def main():
                 if 'Total Energy [eV]' not in col_titles:
                     col_titles.append('Total Energy [eV]')
                 results.append(oszicar.total_energy)
+                
+            elif argument == 'magmom':
+                if 'Magmom' not in col_titles:
+                    col_titles.append('Magmom')
+                results.append(oszicar.magmom)
             
             elif argument == 'all_energies':
                 f = open('%s/all_energies.csv' % current_path, 'wb')

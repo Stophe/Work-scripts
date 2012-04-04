@@ -16,6 +16,7 @@ class Oszicar(object):
         '''
         self.path = path
         self.total_energy = 0
+        self.magmom = 0
         self.all_energies = []
         self._extract_data()
 
@@ -25,5 +26,13 @@ class Oszicar(object):
         for line in f:
             if 'E0=' in line:
                 self.all_energies.append(float(line.split()[4]))
+                if 'mag=' in line:
+                    self.magmom = float(line.split()[9])
         f.close()
         if self.all_energies: self.total_energy = self.all_energies[-1]
+
+if __name__ == '__main__':
+    path = '/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex6'
+    oszicar = Oszicar(path)
+    print oszicar.magmom
+    print oszicar.total_energy
