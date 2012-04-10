@@ -142,6 +142,7 @@ class Contcar(object):
                 else:
                     self.supercell.add(self.symbols[i], position)
             pos_starting_line += self.counts[i]
+        
         # Mark adatoms
         nr_of_adatoms = _count_adatoms()
         for i in range(1, 1 + nr_of_adatoms):

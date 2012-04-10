@@ -48,14 +48,30 @@ class Poscar(object):
             return new_lst
         
         def _count_adatoms():
-            temp = []
-            count = 0
-            for i in range(0, len(self.symbols)):
-                if self.symbols[i] not in temp:
-                    temp.append(self.symbols[i])
-                else:
-                    count += self.counts[i]
-            return count
+            """
+            This function will count atoms as adatoms if there is less atoms on top 
+            surface than in the bottom layer.
+            
+            Accuracy of the rounding is set with decimals variable
+            """
+            decimals = 5
+            
+            hp = round(self.supercell.get_highest_position(), decimals)
+            atoms_at_hp = 0
+            for atom in self.supercell.atoms:
+                if round(atom.position[2], decimals) == hp:
+                    atoms_at_hp += 1
+            lp = round(self.supercell.get_lowest_position(), decimals)
+            atoms_at_lp = 0
+            for atom in self.supercell.atoms:
+                if round(atom.position[2], decimals) == lp:
+                    atoms_at_lp += 1
+            print atoms_at_hp, atoms_at_lp
+            if atoms_at_hp < atoms_at_lp:
+                print atoms_at_hp
+                return atoms_at_hp
+            else:
+                return 0
             
 
         if getline("%s/POSCAR" % self.path, 6).strip().isdigit():
@@ -73,7 +89,6 @@ class Poscar(object):
                 maximum = count
         self.formula_unit = maximum
 
-        nr_of_adatoms = _count_adatoms()
         pos_starting_line = 0
 
         if self.version >= 5:
@@ -122,7 +137,9 @@ class Poscar(object):
                 else:
                     self.supercell.add(self.symbols[i], position)
             pos_starting_line += self.counts[i]
+        
         # Mark adatoms
+        nr_of_adatoms = _count_adatoms()
         for i in range(1, 1 + nr_of_adatoms):
             self.supercell.atoms[-i].adatom = True
 
