@@ -71,9 +71,7 @@ class Contcar(object):
             for atom in self.supercell.atoms:
                 if round(atom.position[2], decimals) == lp:
                     atoms_at_lp += 1
-            print atoms_at_hp, atoms_at_lp
             if atoms_at_hp < atoms_at_lp:
-                print atoms_at_hp
                 return atoms_at_hp
             else:
                 return 0
