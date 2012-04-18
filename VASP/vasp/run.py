@@ -16,7 +16,7 @@ class Run(object):
         Constructor
         '''
         self.path = path
-        self.title = title
+        self.title = title.replace(' ', '')
         self.project = project
         self.walltime = walltime
         self.nodes = nodes
@@ -29,11 +29,14 @@ class Run(object):
             self._create_PDC_file()
         elif self.computer == 'nsc':
             self._create_NSC_file()
+        elif self.computer == 'prace':
+            self._create_prace_file()
 
     def _create_PDC_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
         f.write("#!/bin/bash\n")
         f.write("#PDC run file\n")
+        f.write("#PBS -A %s\n" % self.project)
         f.write("#PBS -N %s\n" % self.title)
         f.write("#PBS -l walltime=%s\n" % self.walltime)
         f.write("#PBS -l mppwidth=%i\n" % self.nodes)
@@ -69,6 +72,28 @@ class Run(object):
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
                 (self.vasp_version))
+        
+    def _create_prace_file(self):
+        f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
+        f.write("#!/bin/bash\n")
+        f.write("#PRACE run file\n")
+        f.write("#@ node = %i\n" % self.nodes)
+        f.write("#@ tasks_per_node = 32\n")
+        f.write("#@ notification = never\n")
+        f.write("#@ input = /dev/null\n")
+        f.write("#@ output = out.$(jobid)\n")
+        f.write("#@ error = error.$(jobid)\n")
+        f.write("#@ wall_clock_limit = %s\n" % self.walltime)
+        f.write("#@ job_type = parallel\n")
+        f.write("#@ network.MPI = sn_all, not_shared, US\n")
+        f.write("#@ queue\n")
+        f.write('\n')
+        f.write("module load vasp/%s\n" % self.vasp_version)
+        f.write("DIR=`pwd`\n")
+        f.write("cd $DIR\n")
+        f.write("vasp\n")
+        
+        f.close()
 
 if __name__ == '__main__':
     path = '/Users/chtho/Desktop'

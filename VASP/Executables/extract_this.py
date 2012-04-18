@@ -111,7 +111,7 @@ def main():
         if oszicar_is_needed(): oszicar = Oszicar(path)
         if poscar_is_needed(): poscar = Poscar(path)
         if contcar_is_needed(): contcar = Contcar(path)
-        if kpoints_is_needed(): kpoints = Kpoints(path)
+        if kpoints_is_needed(): kpoints = Kpoints(path, extract=True)
         if doscar_is_needed(): doscar = Doscar(path)
         
         results = []
@@ -143,7 +143,10 @@ def main():
                     col_titles += ['adatom x', 'adatom y', 'adatom z']
                 for atom in contcar.supercell.atoms:
                     if atom.adatom:
-                        results += list(atom.position)
+                        if 'real' in sys.argv:
+                            results += list(contcar.supercell.convert_to_real(atom.position))
+                        else:
+                            results += list(atom.position)
                         break
 
             elif argument == 'old_adatom_pos':
@@ -151,7 +154,10 @@ def main():
                     col_titles += ['old-adatom x', 'old-adatom y', 'old-adatom z']
                 for atom in poscar.supercell.atoms:
                     if atom.adatom:
-                        results += list(atom.position)
+                        if 'real' in sys.argv:
+                            results += list(poscar.supercell.convert_to_real(atom.position))
+                        else:
+                            results += list(atom.position)
                         break
             
             elif argument == 'total_energy':

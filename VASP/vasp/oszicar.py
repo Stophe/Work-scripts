@@ -35,4 +35,5 @@ if __name__ == '__main__':
     path = '/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex6'
     oszicar = Oszicar(path)
     print oszicar.magmom
+    print oszicar.all_energies
     print oszicar.total_energy

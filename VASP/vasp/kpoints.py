@@ -12,7 +12,7 @@ class Kpoints(object):
     Class for reading and creating KPOINTS files
     '''
 
-    def __init__(self, path, kpoints=(0, 0, 0), mesh_type=''):
+    def __init__(self, path, kpoints=(0, 0, 0), mesh_type='', extract=False):
         '''
         Constructor
         '''
@@ -21,7 +21,7 @@ class Kpoints(object):
         self.mesh_type = mesh_type
         self.total_kpoints = (self.kpoints[0] * self.kpoints[1]
                               * self.kpoints[2])
-        if mesh_type == '':
+        if extract:
             self._extract_kpoints()
             self._extract_type()
         else:
