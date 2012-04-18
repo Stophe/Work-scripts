@@ -18,7 +18,7 @@ def get_submit_command():
     if ".pdc.kth.se" in domain:
         return "qsub"
     elif ".nsc.liu.se" in domain:
-        return "squeue"
+        return "sbatch"
     else:
         return "echo Unknown computer"
 
