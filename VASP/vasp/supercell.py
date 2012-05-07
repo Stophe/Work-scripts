@@ -181,17 +181,17 @@ class SuperCell:
         """Changes the primitive cell and the basis so the new_direction is in the a3-direction
         
         Takes an array as input
-        """
-
-        new_supercell = deepcopy(self)
-        self.expand_3D((5, 5, 5))
+        """  
+        
+        self.expand_3D((7, 7, 7))
         self.transpose_basis((-0.5, -0.5, -0.5))
+        new_supercell = deepcopy(self)
         new_a3_direct = self.convert_to_direct(new_direction)        
         
         origin_at = filter(lambda Atom: norm(Atom.position) == 0, self.atoms)[0]
         
         for atom in self.atoms:
-            if (norm(cross(atom.position, new_a3_direct)) == 0
+            if (round(norm(cross(atom.position, new_a3_direct)), 8) == 0
                 and atom.symbol == origin_at.symbol 
                 and norm(atom.position) != 0
                 and norm(atom.position) < norm(new_a3_direct)):
@@ -200,47 +200,43 @@ class SuperCell:
         
         new_a2_direct = array([1, 1, 1])
         for atom in self.atoms:
-            if (dot(atom.position, new_a3_direct) == 0 
+            if (round(dot(atom.position, new_a3_direct), 8) == 0 
                 and atom.symbol == origin_at.symbol 
                 and norm(atom.position) != 0
                 and norm(atom.position) < norm(new_a2_direct)):
                 new_a2_direct = atom.position
         new_a2 = self.convert_to_real(new_a2_direct)
 
-        new_a1_direct = 10*cross(new_a2_direct, new_a3_direct)
+        new_a1_direct = self.convert_to_direct(cross(self.convert_to_real(new_a2_direct),
+                                                     self.convert_to_real(new_a3_direct)))
         for atom in self.atoms:
-            if (norm(cross(atom.position, new_a1_direct)) == 0 
+            if (round(norm(cross(atom.position, new_a1_direct)),8) == 0 
                 and atom.symbol == origin_at.symbol 
                 and norm(atom.position) < norm(new_a1_direct)
                 and norm(atom.position) != 0):
                 new_a1_direct = atom.position
                 print new_a1_direct
         new_a1 = self.convert_to_real(new_a1_direct)
-        print new_a1    
 
-        new_supercell.primitive_cell = PrimitiveCell(new_a1, new_a2, new_a3)
-        
-        print self.primitive_cell
-        print new_supercell.primitive_cell        
-        
-        # Find which atoms to keep
-        new_basis = []
-        for atom in self.atoms:
-            na1 = norm(new_a1_direct)
-            na2 = norm(new_a2_direct)
-            na3 = norm(new_a3_direct)
-            if (dot(atom.position/na1, new_a1_direct/na1) < 1 and
-                dot(atom.position/na2, new_a2_direct/na2) < 1 and
-                dot(atom.position/na3, new_a3_direct/na3) < 1 and
-                dot(atom.position/na1, new_a1_direct/na1) >= 0. and
-                dot(atom.position/na2, new_a2_direct/na2) >= 0. and
-                dot(atom.position/na3, new_a3_direct/na3) >= 0.):
-                new_basis.append(atom)
+        new_supercell.primitive_cell = PrimitiveCell(new_a1, new_a2, new_a3)         
         
         # Update the positions from the old to the new basis
-        for atom in new_basis:
+        for atom in new_supercell.atoms:
             atom.position = new_supercell.convert_to_direct(self.convert_to_real(atom.position))
-        new_supercell.atoms = new_basis
+            
+        
+        # Remove doubles
+        i = 0
+        while i < len(new_supercell.atoms):
+            if not (new_supercell.atoms[i].position[0] < 0.9999 and
+                    new_supercell.atoms[i].position[1] < 0.9999 and
+                    new_supercell.atoms[i].position[2] < 0.9999 and
+                    new_supercell.atoms[i].position[0] >= -0.0001 and
+                    new_supercell.atoms[i].position[1] >= -0.0001 and
+                    new_supercell.atoms[i].position[2] >= -0.0001):
+                new_supercell.atoms.remove(new_supercell.atoms[i])
+            else:
+                i += 1
         
         return new_supercell
         
@@ -259,16 +255,19 @@ class SuperCell:
 
 def test():
     a0 = 4.2557
-    ti1 = Atom('Ti',array([0.,0.,0.]))
-    ti2 = Atom('N',array([0.5,0.5,0.5]))
-    n1 = Atom('Ti',array([0.,0.,0.5]))
-    n2 = Atom('N',array([0.5,0.5,0.]))
     primitive_cell = PrimitiveCell(array([0.5, 0.5, 0.]),
                                    array([-0.5, 0.5, 0.]),
                                    array([0., 0., 1]))
-    supercell = SuperCell(a0,primitive_cell,[ti1,ti2,n1,n2])
+    
+    basis = [Atom('Ti', array([0., 0., 0.])),
+             Atom('N', array([0.5, 0.5, 0.])),
+             Atom('Ti', array([0.5, 0.5, 0.5])),
+             Atom('N', array([0., 0., 0.5]))]
+    
+    supercell = SuperCell(a0,primitive_cell,basis)
+    supercell.save_structure('/Users/chtho', 'title', relaxation=False)
     #super_cell.expand_3D((0,0,4))
-    new_supercell = supercell.change_surface(array([0, 0, 1]))
+    new_supercell = supercell.change_surface(array([1., 1., 1.]))
 #    print super_cell.primitive_cell
 #    #super_cell.sort()
 #    for at in super_cell.atoms: print at
@@ -287,7 +286,7 @@ def test():
 #    print super_cell.atom_counts('numbers')
 #    super_cell.center_positions()
 #    for at in super_cell.atoms: print at
-    new_supercell.save_structure('/Users/chtho', relaxation=False)
+    new_supercell.save_structure('/Users/chtho', 'title', relaxation=False)
     
         
 
