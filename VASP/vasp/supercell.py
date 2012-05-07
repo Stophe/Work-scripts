@@ -24,6 +24,7 @@ class SuperCell:
         self.atoms = []
         for atom in list_of_atoms:
             self.atoms.append(atom)
+        self.sort()
 
     def __repr__(self):
         return self.atoms

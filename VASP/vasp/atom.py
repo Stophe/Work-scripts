@@ -17,18 +17,13 @@ class Atom(object):
         Atom initiates with an atomic symbol and position array given in
         direct coordinates.
         """
-        if len(symbol) < 2:
-            self.symbol = symbol + " "
-        elif len(symbol) > 2:
-                self.symbol = symbol[0:1]
-        else:
-            self.symbol = symbol
+        self.symbol = symbol
         self.position = array
         self.relaxation = relaxation
         self.adatom = adatom
 
     def __repr__(self):
-        return "%s  %.9f  %.9f  %.9f" % (self.symbol, self.position[0],
+        return "%-2s  %.9f  %.9f  %.9f" % (self.symbol, self.position[0],
                                          self.position[1], self.position[2])
 
     def __str__(self):
@@ -43,4 +38,5 @@ class Atom(object):
 if __name__ == '__main__':
     atom = Atom('Ti', array([1, 1, 1]))
     print atom
+    print atom.__repr__()
     print atom.str_with_relaxation()

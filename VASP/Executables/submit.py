@@ -45,7 +45,7 @@ def main():
                 system("%s %s" % (submit_command, run_file))
             else:
                 while True:
-                    q = raw_input("Resubmit file in %s?\n(y/n or Y/N to apply to all)" % path)
+                    q = raw_input("Resubmit file in %s?\n(y/n or Y/N to apply to all): " % path)
                     if q == 'Y':
                         submit_all = True
                         print"Submitting file in %s" % path
