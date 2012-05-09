@@ -18,7 +18,7 @@ def outcar_is_needed():
     no otherwise.
     """
     possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom', 'encut',
-                         'kpoints', 'total_kpoints', 'nodes']
+                         'kpoints', 'total_kpoints', 'nodes', 'total_nr_of_ions']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -191,6 +191,11 @@ def main():
                 if 'Volume [Ang^3]' not in col_titles:
                     col_titles.append('Volume [Ang^3]')
                 results.append(outcar.volume)
+            
+            elif argument == 'total_nr_of_ions':
+                if 'Nr of ions' not in col_titles:
+                    col_titles.append('Nr of ions')
+                results.append(outcar.total_nr_of_ions)
             
             elif argument == 'kpoints':
                 if 'K-points' not in col_titles:

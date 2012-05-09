@@ -17,7 +17,8 @@ class Outcar(object):
         self.path = path
         self.nodes = 0
         self.atom_symbols = []
-        self.tot_nr_of_electrons = 0
+        self.total_nr_of_ions = 0
+        self.total_nr_of_electrons = 0
         self.total_cpu_time = 0
         self.volume = 0
         self.encut = 0
@@ -35,8 +36,11 @@ class Outcar(object):
             elif 'VRHFIN' in line:
                 line = line.split()[1]
                 self.atom_symbols.append(line[1:-1])
+            elif 'NIONS' in line:
+                line = line.split()
+                self.total_nr_of_ions = int(float(line[11]))
             elif 'NELECT' in line:
-                self.tot_nr_of_electrons = int(float(line.split()[2]))
+                self.total_nr_of_electrons = int(float(line.split()[2]))
             elif 'ENCUT' in line:
                 self.encut = line.split()[2]
             elif 'KPOINTS' in line:
