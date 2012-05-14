@@ -3,7 +3,7 @@ from os import getcwd, system
 from os.path import isdir
 import sys
 from csv import writer, QUOTE_MINIMAL
-import cProfile
+#import cProfile
 
 from vasp.find import Find
 from vasp.outcar import Outcar
@@ -270,9 +270,9 @@ def main():
         system('/bin/cat "%s/results.csv"' % current_path)
 
 if __name__ == '__main__':
-    if 'time_test' in sys.argv:
-        loc = locals()
-        glob = globals()
-        cProfile.runctx('main()', glob, loc, 'profiledata.txt')
-    else:
-        main()
+#    if 'time_test' in sys.argv:
+#        loc = locals()
+#        glob = globals()
+#        cProfile.runctx('main()', glob, loc, 'profiledata.txt')
+#    else:
+    main()

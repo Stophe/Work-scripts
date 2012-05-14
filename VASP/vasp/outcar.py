@@ -4,7 +4,6 @@ Created on Feb 27, 2012
 @author: chtho
 '''
 
-
 class Outcar(object):
     '''
     Class for extracting data from OUTCAR files

@@ -8,7 +8,7 @@ import pstats
 
 
 def main():
-    f = open('results.txt', 'w')
+    f = open('stat_results.txt', 'w')
     s = pstats.Stats('profiledata.txt', stream=f)
     s.sort_stats('cumulative')
     s.print_stats()
