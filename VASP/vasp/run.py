@@ -64,10 +64,6 @@ class Run(object):
         f.write("#SBATCH -t %s\n" % self.walltime)
         f.write("#SBATCH -N %i\n" % self.nodes)
         f.write("#SBATCH %s\n" % self.project)
-#        f.write('\n' * 2)
-#        f.write("#Setting correct working directory\n")
-#        f.write("PERMDIR=%s\n" % self.path)
-#        f.write("cd ${PERMDIR}\n")
         f.write('\n')
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %

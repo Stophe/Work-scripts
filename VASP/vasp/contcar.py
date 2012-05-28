@@ -35,8 +35,8 @@ class Contcar(object):
         try:
             self._extract_data()
         except:
-            print "Error with CONTCAR in: %s\n" % self.path
-            print exc_info()
+            print "Error with CONTCAR in: %s" % self.path
+            #print exc_info()
 
     def _extract_data(self):
 

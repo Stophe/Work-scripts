@@ -252,6 +252,7 @@ class SuperCell:
     
     def convert_to_direct(self, array):
         return ravel(array * inv(self.primitive_cell.matrix))
+    
 
 def test():
     a0 = 4.2557

@@ -42,7 +42,7 @@ def poscar_is_needed():
     no otherwise.
     """
     possible_settings = ['old_title', 'old_formula_unit', 'old_surface_area',
-                         'old_lattice_constant', 'old_all_energies', 'old_adatom_pos']
+                         'old_lattice_constant', 'old_all_energies', 'old_adatom_pos', 'adatom_pos']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -140,6 +140,7 @@ def main():
                 results.append(contcar.formula_unit)
             
             elif argument == 'adatom_pos':
+                found = False
                 if 'adatom_pos' not in col_titles:
                     col_titles += ['adatom x', 'adatom y', 'adatom z']
                 for atom in contcar.supercell.atoms:
@@ -148,7 +149,16 @@ def main():
                             results += list(contcar.supercell.convert_to_real(atom.position))
                         else:
                             results += list(atom.position)
+                        found = True
                         break
+                if not found:
+                    for atom in poscar.supercell.atoms:
+                        if atom.adatom:
+                            if 'real' in sys.argv:
+                                results += list(poscar.supercell.convert_to_real(atom.position))
+                            else:
+                                results += list(atom.position)
+                            break
 
             elif argument == 'old_adatom_pos':
                 if 'old_adatom_pos' not in col_titles:
