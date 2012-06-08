@@ -30,7 +30,7 @@ class Outcar(object):
         # Extracts the data from the OUTCAR file
         f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
-            if 'running on' in line:
+            if 'running on' in line and 'image' not in line:
                 self.nodes = int(float(line.split()[2]))
             elif 'VRHFIN' in line:
                 line = line.split()[1]
