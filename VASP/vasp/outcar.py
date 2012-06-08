@@ -31,7 +31,7 @@ class Outcar(object):
         f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
             if 'running on' in line:
-                self.nodes = int(line.split()[2])
+                self.nodes = int(float(line.split()[2]))
             elif 'VRHFIN' in line:
                 line = line.split()[1]
                 self.atom_symbols.append(line[1:-1])
