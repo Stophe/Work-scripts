@@ -106,8 +106,8 @@ def main():
 
     written_header = False
 
-    find = Find(current_path, 'OUTCAR')
-    for path in find.paths:
+    paths = Find(current_path, 'OUTCAR')
+    for path in paths:
         if outcar_is_needed(): outcar = Outcar(path)
         if oszicar_is_needed(): oszicar = Oszicar(path)
         if poscar_is_needed(): poscar = Poscar(path)

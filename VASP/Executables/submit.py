@@ -37,9 +37,9 @@ def main():
     found_run_files = Find(starting_path, run_file)
     found_out_files = Find(starting_path, out_file)
     
-    for path in found_run_files.paths:
+    for path in found_run_files:
         chdir(path)
-        if path in found_out_files.paths:
+        if path in found_out_files:
             if submit_all:
                 print"Submitting file in %s" % path
                 system("%s %s" % (submit_command, run_file))
