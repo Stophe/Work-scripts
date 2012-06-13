@@ -13,7 +13,7 @@ def Find(path, file_name, paths=[]):
         if item == file_name:
             paths.append(path)
         elif isdir("%s/%s" % (path, item)):
-            paths = Find("%s/%s" % (path, item), file_name)
+            paths = Find("%s/%s" % (path, item), file_name, paths)
     return paths
 
 if __name__ == "__main__":
