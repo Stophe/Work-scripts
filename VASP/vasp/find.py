@@ -8,13 +8,16 @@ from os import listdir
 from os.path import isdir
 
 
-def Find(path, file_name):
-    paths = []
-    directory_list = listdir(path)
+def Find(path, file_name, paths=[]):
     for item in listdir(path):
         if item == file_name:
             paths.append(path)
         elif isdir("%s/%s" % (path, item)):
-            Find("%s/%s" % (path, item), file_name)
+            paths = Find("%s/%s" % (path, item), file_name)
     return paths
 
+if __name__ == "__main__":
+    print "Looking for dirs containing 'OUTCAR' starting from '.':"
+    print Find(".", "OUTCAR")
+    print "Looking for dirs containing 'INCARS' starting from '.':"
+    print Find(".", "INCAR")
