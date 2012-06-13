@@ -4,17 +4,16 @@ Created on Feb 27, 2012
 @author: Christopher Tholander
 '''
 
-from os import listdir
-from os.path import isdir
+import os
 
 
-def Find(path, file_name, paths=[]):
-    for item in listdir(path):
-        if item == file_name:
+def Find(path, file_name):
+    paths = []
+    for path, _, items in os.walk(path):
+        if file_name in items:
             paths.append(path)
-        elif isdir("%s/%s" % (path, item)):
-            paths = Find("%s/%s" % (path, item), file_name, paths)
     return paths
+
 
 if __name__ == "__main__":
     print "Looking for dirs containing 'OUTCAR' starting from '.':"
