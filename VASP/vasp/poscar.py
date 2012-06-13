@@ -33,6 +33,12 @@ class Poscar(object):
         self.surface_area = 0
         self._extract_data()
 
+    def find_adatoms(self):
+        # Mark adatoms
+        nr_of_adatoms = _count_adatoms()
+        for i in range(1, 1 + nr_of_adatoms):
+            self.supercell.atoms[-i].adatom = True
+    
     def _extract_data(self):
 
         def _float_list(lst):
@@ -135,11 +141,6 @@ class Poscar(object):
                 else:
                     self.supercell.add(self.symbols[i], position)
             pos_starting_line += self.counts[i]
-        
-        # Mark adatoms
-        nr_of_adatoms = _count_adatoms()
-        for i in range(1, 1 + nr_of_adatoms):
-            self.supercell.atoms[-i].adatom = True
 
         f.close()
 
