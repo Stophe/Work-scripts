@@ -15,7 +15,7 @@ from vasp.find import Find
 
 def get_submit_command():
     domain = getfqdn()
-    if ".pdc.kth.se" in domain:
+    if ".pdc.kth.se" or ".hpc2n.umu.se" in domain:
         return "qsub"
     elif ".nsc.liu.se" in domain or 'neolith' in domain:
         return "sbatch"

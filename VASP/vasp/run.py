@@ -31,6 +31,8 @@ class Run(object):
             self._create_NSC_file()
         elif self.computer == 'prace':
             self._create_prace_file()
+        elif self.computer == 'hpc2n':
+            self._create_HPC2N_file()
 
     def _create_PDC_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
@@ -40,6 +42,30 @@ class Run(object):
         f.write("#PBS -N %s\n" % self.title)
         f.write("#PBS -l walltime=%s\n" % self.walltime)
         f.write("#PBS -l mppwidth=%i\n" % self.nodes)
+        f.write("#PBS -e error_file.e\n")
+        f.write("#PBS -o output_file.o\n")
+        f.write('\n' * 2)
+        f.write("#Setting correct working directory\n")
+        f.write("PERMDIR=$PBS_O_WORKDIR\n")
+        f.write("cd ${PERMDIR}\n")
+        f.write('\n')
+        f.write("#Loading modules\n")
+        f.write(". /opt/modules/default/etc/modules.sh\n")
+        f.write("module add vasp/%s\n" % self.vasp_version)
+        f.write('\n')
+        f.write("#Run calculation\n")
+        f.write("aprun -n %i /pdc/vol/vasp/%s/vasp > temp.out\n" % (self.nodes,
+                                                         self.vasp_version))
+        f.close()
+        
+    def _create_HPC2N_file(self):
+        f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
+        f.write("#!/bin/bash\n")
+        f.write("#PDC run file\n")
+        f.write("#PBS -A %s\n" % self.project)
+        f.write("#PBS -N %s\n" % self.title)
+        f.write("#PBS -l walltime=%s\n" % self.walltime)
+        f.write("#PBS -l nodes=%i:ppn=8\n" % self.nodes)
         f.write("#PBS -e error_file.e\n")
         f.write("#PBS -o output_file.o\n")
         f.write('\n' * 2)
