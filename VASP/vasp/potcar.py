@@ -9,7 +9,7 @@ class Potcar(object):
     Class for generating potcars
     '''
 
-    def __init__(self, path, path_to_potcars, potentials):
+    def __init__(self, path, path_to_potcars='', potentials=[]):
         '''
         Constructor
         '''
@@ -25,6 +25,13 @@ class Potcar(object):
                 potcar.write(line)
             f.close()
         potcar.close()
+        
+    def read_file(self):
+        potcar = open("%s/POTCAR" % self.path, 'r')
+        for line in potcar:
+            if "TITEL" in line:
+                self.potentials.append(line.split()[2])
+        print self.potentials
 
 if __name__ == '__main__':
     path = '/Users/chtho/Desktop'
