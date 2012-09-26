@@ -1,4 +1,4 @@
-#!usr/bin/env python
+#!/usr/bin/env python
 '''
 Created on Sep 20, 2012
 
@@ -14,7 +14,7 @@ def all_files_exist(paths):
     for path in paths:
         list_of_files_in_path = os.listdir(path)
         if 'POSCAR' not in list_of_files_in_path:
-            #If the calculation is a NEB the 01 subfolder is also checked
+            #If the calculation is a NEB the 01 sub-folder is also checked
             if not os.path.isfile(os.path.join(path, '01', 'POSCAR')):
                 print "No POSCAR file present in:\n%s" % path
                 all_here = False
