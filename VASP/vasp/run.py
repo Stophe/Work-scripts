@@ -3,15 +3,16 @@ Created on Mar 28, 2012
 
 @author: chtho
 '''
-
+from os import listdir
+from os.path import join
 
 class Run(object):
     '''
     Class generating RUN files
     '''
 
-    def __init__(self, path, title, project, walltime,
-                 nodes, vasp_version, computer, filename_suffix=''):
+    def __init__(self, path, title='', project=None, walltime=None,
+                 nodes=None, vasp_version=None, computer=None, filename_suffix=None):
         '''
         Constructor
         '''
@@ -23,6 +24,36 @@ class Run(object):
         self.vasp_version = vasp_version
         self.computer = computer
         self.filename_suffix = filename_suffix
+        if nodes == None:
+            self._extract_data()
+
+    
+    def _extract_data(self):
+        dl = listdir(self.path)
+        for item in dl:
+            if "RUN" in item:
+                f_name = item
+        f = open(join(self.path, f_name), 'r')
+        for line in f:
+            if "#PBS -A" in line:
+                self.project = line.split()[2]
+            elif "#PBS -N" in line:
+                self.title = line.split()[2]
+            elif "walltime" in line:
+                self.walltime = line.split()[2][9:]
+            elif "mppwidth" in line:
+                self.nodes = int(line.split()[2][9:])
+            elif "#SBATCH -J" in line:
+                self.title = line.split()[2]
+            elif "#SBATCH -N" in line:
+                self.nodes = int(line.split()[2])
+            elif "#SBATCH -t" in line:
+                self.walltime = line.split()[2]
+            elif "#SBATCH -U" in line:
+                self.project = line.split()[2]
+            elif "#SBATCH -A" in line:
+                self.project = line[10:]
+        f.close()
 
     def create_file(self):
         if self.computer == 'pdc':
