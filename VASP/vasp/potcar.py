@@ -9,13 +9,15 @@ class Potcar(object):
     Class for generating potcars
     '''
 
-    def __init__(self, path, path_to_potcars, potentials):
+    def __init__(self, path, path_to_potcars=None, potentials=None):
         '''
         Constructor
         '''
         self.path = path
         self.path_to_potcars = path_to_potcars
         self.potentials = potentials
+        if path_to_potcars == None:
+            self._extract_data()
     
     def create_file(self):
         potcar = open("%s/POTCAR" % self.path, 'w')
@@ -24,6 +26,13 @@ class Potcar(object):
             for line in f:
                 potcar.write(line)
             f.close()
+        potcar.close()
+        
+    def _extract_data(self):
+        potcar = open("%s/POTCAR" % self.path, 'r')
+        for line in potcar:
+            if "TITEL" in line:
+                self.potentials.append(line.split()[3])
         potcar.close()
 
 if __name__ == '__main__':
