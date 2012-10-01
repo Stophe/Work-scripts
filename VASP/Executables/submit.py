@@ -17,7 +17,7 @@ def get_submit_command():
     domain = getfqdn()
     if ".pdc.kth.se" or ".hpc2n.umu.se" in domain:
         return "qsub"
-    elif ".nsc.liu.se" in domain or 'neolith' in domain:
+    elif ".nsc.liu.se" in domain or 'neolith' in domain or 'triolith' in domain:
         return "sbatch"
     else:
         return "echo Unknown computer"

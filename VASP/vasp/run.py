@@ -12,7 +12,7 @@ class Run(object):
     '''
 
     def __init__(self, path, title='', project=None, walltime=None,
-                 nodes=None, vasp_version=None, computer=None, filename_suffix=None):
+                 nodes=None, vasp_version=None, computer=None, filename_suffix=''):
         '''
         Constructor
         '''
