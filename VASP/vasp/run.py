@@ -12,7 +12,7 @@ class Run(object):
     '''
 
     def __init__(self, path, title='', project=None, walltime=None,
-                 nodes=None, vasp_version=None, computer=None, filename_suffix=None):
+                 nodes=None, vasp_version=None, computer=None, filename_suffix=''):
         '''
         Constructor
         '''
@@ -64,6 +64,8 @@ class Run(object):
             self._create_prace_file()
         elif self.computer == 'hpc2n':
             self._create_HPC2N_file()
+        elif self.computer == 'triolith':
+            self._create_Triolith_file()
 
     def _create_PDC_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
@@ -124,6 +126,19 @@ class Run(object):
         f.write('\n')
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+                (self.vasp_version))
+        
+    def _create_Triolith_file(self):
+        f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
+        f.write("#!/bin/bash\n")
+        f.write("#Triolith run file\n")
+        f.write("#SBATCH -J %s\n" % self.title)
+        f.write("#SBATCH -t %s\n" % self.walltime)
+        f.write("#SBATCH -N %i\n" % self.nodes)
+        f.write("#SBATCH -U %s\n" % self.project)
+        f.write('\n')
+        f.write("#Run calculation\n")
+        f.write("mpprun /software/apps/vasp/%s/build01/vasp-half" %
                 (self.vasp_version))
         
     def _create_prace_file(self):
