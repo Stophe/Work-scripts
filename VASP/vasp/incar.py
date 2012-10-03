@@ -40,6 +40,7 @@ class Incar(object):
         self.spring = spring  # Nudged elastic band when negative. Default = -5
         if system == None:
             self._extract_data()
+    
 
     def _extract_data(self):
         # Extracts data from the INCAR file
@@ -47,6 +48,8 @@ class Incar(object):
         for line in f:
             if 'ENCUT' in line and '#ENCUT' not in line:
                 self.encut = line.split('=')[1][:-1]
+            elif 'NPAR' in line:
+                self.npar = int(line.split('=')[1][:-1])
 
     def create_file(self):
         lst = []

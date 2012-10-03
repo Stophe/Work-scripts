@@ -106,8 +106,8 @@ def main():
 
     written_header = False
 
-    find = Find(current_path, 'OUTCAR')
-    for path in find.paths:
+    paths = Find(current_path, 'OUTCAR')
+    for path in paths:
         if outcar_is_needed(): outcar = Outcar(path)
         if oszicar_is_needed(): oszicar = Oszicar(path)
         if poscar_is_needed(): poscar = Poscar(path)
@@ -143,26 +143,35 @@ def main():
                 found = False
                 if 'adatom_pos' not in col_titles:
                     col_titles += ['adatom x', 'adatom y', 'adatom z']
-                for atom in contcar.supercell.atoms:
-                    if atom.adatom:
-                        if 'real' in sys.argv:
-                            results += list(contcar.supercell.convert_to_real(atom.position))
-                        else:
-                            results += list(atom.position)
-                        found = True
-                        break
-                if not found:
-                    for atom in poscar.supercell.atoms:
+                try:
+                    contcar.find_adatoms()
+                    for atom in contcar.supercell.atoms:
                         if atom.adatom:
                             if 'real' in sys.argv:
-                                results += list(poscar.supercell.convert_to_real(atom.position))
+                                results += list(contcar.supercell.convert_to_real(atom.position))
                             else:
                                 results += list(atom.position)
+                            found = True
                             break
+                except:
+                    print "Error: No CONTCAR found, trying POSCAR instead!"
+                if not found:
+                    try:
+                        poscar.find_adatoms()
+                        for atom in poscar.supercell.atoms:
+                            if atom.adatom:
+                                if 'real' in sys.argv:
+                                    results += list(poscar.supercell.convert_to_real(atom.position))
+                                else:
+                                    results += list(atom.position)
+                                break
+                    except:
+                        print "Error: No POSCAR found either!"
 
             elif argument == 'old_adatom_pos':
                 if 'old_adatom_pos' not in col_titles:
                     col_titles += ['old-adatom x', 'old-adatom y', 'old-adatom z']
+                poscar.find_adatoms()
                 for atom in poscar.supercell.atoms:
                     if atom.adatom:
                         if 'real' in sys.argv:

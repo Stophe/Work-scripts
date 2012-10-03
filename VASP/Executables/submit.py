@@ -15,16 +15,15 @@ from vasp.find import Find
 
 def get_submit_command():
     domain = getfqdn()
-    if ".pdc.kth.se" in domain:
+    if ".pdc.kth.se" in domain or ".hpc2n.umu.se" in domain:
         return "qsub"
-    elif ".nsc.liu.se" in domain or 'neolith' in domain:
+    elif ".nsc.liu.se" in domain or 'neolith' in domain or 'triolith' in domain:
         return "sbatch"
     else:
-        return "echo Unknown computer"
+        return "sbatch"
 
 def main():
     submit_command = get_submit_command()
-    
     submit_all = False
     
     system('clear')
@@ -37,9 +36,9 @@ def main():
     found_run_files = Find(starting_path, run_file)
     found_out_files = Find(starting_path, out_file)
     
-    for path in found_run_files.paths:
+    for path in found_run_files:
         chdir(path)
-        if path in found_out_files.paths:
+        if path in found_out_files:
             if submit_all:
                 print"Submitting file in %s" % path
                 system("%s %s" % (submit_command, run_file))

@@ -4,27 +4,19 @@ Created on Feb 27, 2012
 @author: Christopher Tholander
 '''
 
-from os import listdir
-from os.path import isdir
+import os
 
 
-class Find(object):
-    '''
-    classdocs
-    '''
+def Find(path, file_name):
+    paths = []
+    for path, _, items in os.walk(path):
+        if file_name in items:
+            paths.append(path)
+    return paths
 
-    def __init__(self, path, file_name):
-        '''
-        Constructor
-        '''
-        self.paths = []
-        self._find_paths(path, file_name)
 
-    def _find_paths(self, path, file_name):
-        """Finds the paths to the result files"""
-        directory_list = listdir(path)
-        for item in directory_list:
-            if item == file_name:
-                self.paths.append(path)
-            elif isdir("%s/%s" % (path, item)):
-                self._find_paths("%s/%s" % (path, item), file_name)
+if __name__ == "__main__":
+    print "Looking for dirs containing 'OUTCAR' starting from '.':"
+    print Find(".", "OUTCAR")
+    print "Looking for dirs containing 'INCARS' starting from '.':"
+    print Find(".", "INCAR")

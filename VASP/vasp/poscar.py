@@ -33,6 +33,38 @@ class Poscar(object):
         self.surface_area = 0
         self._extract_data()
 
+    def find_adatoms(self):
+        # Mark adatoms
+        nr_of_adatoms = self._count_adatoms()
+        for i in range(1, 1 + nr_of_adatoms):
+            self.supercell.atoms[-i].adatom = True
+            
+            
+    def _count_adatoms(self):
+        """
+        This function will count atoms as adatoms if there is less atoms on top 
+        surface than in the bottom layer.
+        
+        Accuracy of the rounding is set with decimals variable
+        """
+        decimals = 5
+        
+        hp = round(self.supercell.get_highest_position(), decimals)
+        atoms_at_hp = 0
+        for atom in self.supercell.atoms:
+            if round(atom.position[2], decimals) == hp:
+                atoms_at_hp += 1
+        lp = round(self.supercell.get_lowest_position(), decimals)
+        atoms_at_lp = 0
+        for atom in self.supercell.atoms:
+            if round(atom.position[2], decimals) == lp:
+                atoms_at_lp += 1
+        if atoms_at_hp < atoms_at_lp:
+            return atoms_at_hp
+        else:
+            return 0    
+            
+            
     def _extract_data(self):
 
         def _float_list(lst):
@@ -47,29 +79,6 @@ class Poscar(object):
                 new_lst.append(int(item))
             return new_lst
         
-        def _count_adatoms():
-            """
-            This function will count atoms as adatoms if there is less atoms on top 
-            surface than in the bottom layer.
-            
-            Accuracy of the rounding is set with decimals variable
-            """
-            decimals = 5
-            
-            hp = round(self.supercell.get_highest_position(), decimals)
-            atoms_at_hp = 0
-            for atom in self.supercell.atoms:
-                if round(atom.position[2], decimals) == hp:
-                    atoms_at_hp += 1
-            lp = round(self.supercell.get_lowest_position(), decimals)
-            atoms_at_lp = 0
-            for atom in self.supercell.atoms:
-                if round(atom.position[2], decimals) == lp:
-                    atoms_at_lp += 1
-            if atoms_at_hp < atoms_at_lp:
-                return atoms_at_hp
-            else:
-                return 0
             
 
         if getline("%s/POSCAR" % self.path, 6).strip().isdigit():
@@ -135,11 +144,6 @@ class Poscar(object):
                 else:
                     self.supercell.add(self.symbols[i], position)
             pos_starting_line += self.counts[i]
-        
-        # Mark adatoms
-        nr_of_adatoms = _count_adatoms()
-        for i in range(1, 1 + nr_of_adatoms):
-            self.supercell.atoms[-i].adatom = True
 
         f.close()
 

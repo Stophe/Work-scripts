@@ -67,7 +67,14 @@ class SuperCell:
     def sort(self):
         new_list = sorted(self.atoms, key=lambda atom: atom.symbol,
                           reverse=True)
-        self.atoms = new_list
+        adatoms = []
+        others = []
+        for atom in new_list:
+            if atom.adatom:
+                adatoms.append(atom)
+            else:
+                others.append(atom)
+        self.atoms = others + adatoms
 
     def convert_atom_on_surface(self, from_symbol, to_symbol):
         for atom in self.atoms:
