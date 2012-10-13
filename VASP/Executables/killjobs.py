@@ -18,5 +18,9 @@ if __name__ == '__main__':
         elif ".nsc.liu.se" in domain:
             for i in range(int(argv[1]), int(argv[2]) + 1):
                 system("scancel %i" % i)
+        elif "triolith" in domain:
+            print "sjf"
+            for i in range(int(argv[1]), int(argv[2]) + 1):
+                system("scancel %i" % i)
     else:
         print "Give start and stop value as arguments!\n"
