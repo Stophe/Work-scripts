@@ -164,7 +164,7 @@ class Run(object):
         f.write("#Triolith run file\n")
         f.write("#SBATCH -J %s\n" % self.title)
         f.write("#SBATCH -t %s\n" % self.walltime)
-        f.write("#SBATCH -N %i\n" % self.nodes)
+        f.write("#SBATCH -N %i --exclusive\n" % self.nodes)
         f.write("#SBATCH -U %s\n" % self.project)
         f.write('\n')
         f.write("#Run calculation\n")
