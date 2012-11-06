@@ -153,7 +153,9 @@ class Run(object):
         f.write("#SBATCH -t %s\n" % self.walltime)
         f.write("#SBATCH -N %i\n" % self.nodes)
         f.write("#SBATCH -A %s -p green_risk\n" % self.project)
+        f.write("#SBATCH --requeue\n")
         f.write('\n')
+        f.write("cp CONTCAR POSCAR\n")
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
                 (self.vasp_version))

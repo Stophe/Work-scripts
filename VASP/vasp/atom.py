@@ -11,14 +11,15 @@ class Atom(object):
     classdocs
     '''
 
-    def __init__(self, symbol, array=array([0., 0., 0.]),
+    def __init__(self, symbol, position=array([0., 0., 0.]), velocity=array([0., 0., 0.]),
                  relaxation=['T', 'T', 'T'], adatom=False):
         """
         Atom initiates with an atomic symbol and position array given in
         direct coordinates.
         """
         self.symbol = symbol
-        self.position = array
+        self.position = position
+        self.velocity = velocity
         self.relaxation = relaxation
         self.adatom = adatom
 
