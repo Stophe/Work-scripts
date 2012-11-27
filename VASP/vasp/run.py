@@ -66,6 +66,10 @@ class Run(object):
             self._create_HPC2N_file()
         elif self.computer == 'triolith':
             self._create_Triolith_file()
+        elif self.computer == 'green':
+            self._create_green_file()
+        elif self.computer == 'green_risk':
+            self._create_green_risk_file()
 
     def _create_PDC_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
@@ -128,13 +132,41 @@ class Run(object):
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
                 (self.vasp_version))
         
+    def _create_green_file(self):
+        f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
+        f.write("#!/bin/bash\n")
+        f.write("#NSC run file\n")
+        f.write("#SBATCH -J %s\n" % self.title)
+        f.write("#SBATCH -t %s\n" % self.walltime)
+        f.write("#SBATCH -N %i\n" % self.nodes)
+        f.write("#SBATCH -A %s -p green\n" % self.project)
+        f.write('\n')
+        f.write("#Run calculation\n")
+        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+                (self.vasp_version))
+        
+    def _create_green_risk_file(self):
+        f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
+        f.write("#!/bin/bash\n")
+        f.write("#NSC run file\n")
+        f.write("#SBATCH -J %s\n" % self.title)
+        f.write("#SBATCH -t %s\n" % self.walltime)
+        f.write("#SBATCH -N %i\n" % self.nodes)
+        f.write("#SBATCH -A %s -p green_risk\n" % self.project)
+        f.write("#SBATCH --requeue\n")
+        f.write('\n')
+        f.write("cp CONTCAR POSCAR\n")
+        f.write("#Run calculation\n")
+        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+                (self.vasp_version))
+        
     def _create_Triolith_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
         f.write("#!/bin/bash\n")
         f.write("#Triolith run file\n")
         f.write("#SBATCH -J %s\n" % self.title)
         f.write("#SBATCH -t %s\n" % self.walltime)
-        f.write("#SBATCH -N %i\n" % self.nodes)
+        f.write("#SBATCH -N %i --exclusive\n" % self.nodes)
         f.write("#SBATCH -U %s\n" % self.project)
         f.write('\n')
         f.write("#Run calculation\n")

@@ -7,6 +7,7 @@ from linecache import getline
 from numpy import array
 from numpy import cross
 from numpy.linalg import norm
+from datetime import datetime
 
 from vasp.supercell import SuperCell
 from vasp.primitive_cell import PrimitiveCell
@@ -17,21 +18,26 @@ class Poscar(object):
     classdocs
     '''
 
-    def __init__(self, path):
+    def __init__(self, path, supercell=None, title="", selective_dynamics=False, velocities=False):
         '''
         Constructor
         '''
         self.path = path
         self.version = 0
-        self.title = ''
-        self.selective_dynamics = False
+        self.title = title
+        self.selective_dynamics = selective_dynamics
+        self.velocities = velocities
         self.direct_coords = False
         self.counts = []
         self.formula_unit = 0
         self.symbols = []
-        self.supercell = SuperCell()
+        if supercell == None:
+            self.supercell=SuperCell()
+        else:
+            self.supercell = supercell
         self.surface_area = 0
-        self._extract_data()
+        if supercell == None:
+            self._extract_data()
 
     def find_adatoms(self):
         # Mark adatoms
@@ -146,6 +152,27 @@ class Poscar(object):
             pos_starting_line += self.counts[i]
 
         f.close()
+
+    def create_file(self):
+        outfile = open(self.path + '/POSCAR', 'w')
+        outfile.write(self.title)
+        outfile.write(' - %s\n' % datetime.now())
+        outfile.write('%f\n' % self.supercell.a0)
+        outfile.write(str(self.supercell.primitive_cell))
+        outfile.write(self.supercell.atom_counts('letters'))
+        outfile.write(self.supercell.atom_counts('numbers'))
+        if self.selective_dynamics: outfile.write('\nSelective dynamics')
+        outfile.write("\nDirect\n")
+        for atom in self.supercell.atoms:
+            if self.selective_dynamics:
+                outfile.write("%s\n" % atom.str_with_relaxation())
+            else:
+                outfile.write("%s\n" % atom)
+        if self.velocities:
+            outfile.write(2 * '\n')        
+            for atom in self.supercell.atoms:
+                outfile.write("  %.9f  %.9f  %.9f\n" % (atom.velocity[0], atom.velocity[1], atom.velocity[2]))
+        outfile.close()
 
 if __name__ == '__main__':
     poscar = Poscar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")

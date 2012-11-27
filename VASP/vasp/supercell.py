@@ -32,8 +32,8 @@ class SuperCell:
     def copy(self):
         return deepcopy(self)
 
-    def add(self, symbol, position, relaxation=['T', 'T', 'T'], adatom=False):
-        self.atoms.append(Atom(symbol, position, relaxation, adatom))
+    def add(self, symbol, position, velocity=array([0., 0., 0.]), relaxation=['T', 'T', 'T'], adatom=False):
+        self.atoms.append(Atom(symbol, position, velocity, relaxation, adatom))
 
     def expand_3D(self, times):
         """
@@ -120,7 +120,11 @@ class SuperCell:
                 output = output + "%s %i " % (item, count[types.index(item)])
         return output
     
-    def save_structure(self, path, title, file_type='poscar', relaxation=False):
+    """
+    ---------------------------------------------------------------------------
+    DO NOT USE - will be removed in the future
+    """
+    def save_structure(self, path, title, file_type='poscar', relaxation=False, velocities=False):
         if file_type in ['poscar', 'POSCAR']:
             outfile = open(path + '/POSCAR', 'w')
             outfile.write(title)
@@ -133,13 +137,19 @@ class SuperCell:
             outfile.write("\nDirect\n")
             for atom in self.atoms:
                 if relaxation:
-                    print >>outfile, atom.str_with_relaxation()
+                    outfile.write("%s\n" % atom.str_with_relaxation())
                 else:
-                    print >>outfile, atom
+                    outfile.write("%s\n" % atom)
+            if velocities:
+                outfile.write(2 * '\n')        
+                for atom in self.atoms:
+                    outfile.write("  %.9f  %.9f  %.9f\n" % (atom.velocity[0], atom.velocity[1], atom.velocity[2]))
             outfile.close()
         elif file_type == 'xyz':
             pass # Might be added later
-
+    """
+    ---------------------------------------------------------------------------
+    """
 
     def get_highest_position(self, direction=2, symbol='Any'):
         """
