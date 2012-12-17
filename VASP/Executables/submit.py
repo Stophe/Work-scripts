@@ -24,7 +24,8 @@ def get_submit_command():
 
 def main():
     submit_command = get_submit_command()
-    submit_all = False
+    resubmit_all = False
+    resubmit_none = False
     
     system('clear')
     starting_path = getcwd() 
@@ -39,14 +40,17 @@ def main():
     for path in found_run_files:
         chdir(path)
         if path in found_out_files:
-            if submit_all:
-                print"Submitting file in %s" % path
-                system("%s %s" % (submit_command, run_file))
+            if resubmit_all or resubmit_none:
+                if resubmit_all:
+                    print"Submitting file in %s" % path
+                    system("%s %s" % (submit_command, run_file))
+                else:
+                    print "Ignoring file in %s" % path
             else:
                 while True:
                     q = raw_input("Resubmit file in %s?\n(y/n or Y/N to apply to all): " % path)
                     if q == 'Y':
-                        submit_all = True
+                        resubmit_all = True
                         print"Submitting file in %s" % path
                         system("%s %s" % (submit_command, run_file))
                         break
@@ -57,6 +61,7 @@ def main():
                     elif q == 'n':
                         break
                     elif q == 'N':
+                        resubmit_none = True
                         break
                     else:
                         print "%s is not a valid choice." % q
