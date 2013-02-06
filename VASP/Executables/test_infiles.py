@@ -12,6 +12,18 @@ from vasp.poscar import Poscar
 from vasp.run import Run
 from vasp.incar import Incar
 
+def run_tests(starting_path):
+    print "\nRunning tests\n" + 50*"-"
+    paths = Find(starting_path, "RUN")
+    if len(paths) != 0:
+        if all_files_exist(paths):
+            test_potcar(paths)
+            test_run_file(paths)
+            test_poscar(paths)
+    else:
+        print "No RUN files were found"
+    print 50*"-" + "\nFinished tests\n"
+
 def all_files_exist(paths):
     """
     Test to see that all files are present.

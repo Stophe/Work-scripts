@@ -66,6 +66,8 @@ class Run(object):
             self._create_HPC2N_file()
         elif self.computer == 'triolith':
             self._create_Triolith_file()
+        elif self.computer == 'matter':
+            self._create_Matter_file()
         elif self.computer == 'green':
             self._create_green_file()
         elif self.computer == 'green_risk':
@@ -93,6 +95,8 @@ class Run(object):
         f.write("#Run calculation\n")
         f.write("aprun -n %i /pdc/vol/vasp/%s/vasp > temp.out\n" % (self.nodes,
                                                          self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
         f.close()
         
     def _create_HPC2N_file(self):
@@ -117,6 +121,8 @@ class Run(object):
         f.write("#Run calculation\n")
         f.write("aprun -n %i /pdc/vol/vasp/%s/vasp > temp.out\n" % (self.nodes,
                                                          self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
         f.close()
 
     def _create_NSC_file(self):
@@ -131,6 +137,25 @@ class Run(object):
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
                 (self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.close()
+        
+    def _create_Matter_file(self):
+        f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
+        f.write("#!/bin/bash\n")
+        f.write("#Matter run file\n")
+        f.write("#SBATCH -J %s\n" % self.title)
+        f.write("#SBATCH -t %s\n" % self.walltime)
+        f.write("#SBATCH -N %i\n" % self.nodes)
+        f.write("#SBATCH -A %s\n" % self.project)
+        f.write('\n')
+        f.write("#Run calculation\n")
+        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+                (self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.close()
         
     def _create_green_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
@@ -144,6 +169,9 @@ class Run(object):
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
                 (self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.close()
         
     def _create_green_risk_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
@@ -159,6 +187,9 @@ class Run(object):
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
                 (self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.close()
         
     def _create_Triolith_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
@@ -172,6 +203,9 @@ class Run(object):
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/build01/vasp-half" %
                 (self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.close()
         
     def _create_prace_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
@@ -192,7 +226,8 @@ class Run(object):
         f.write("DIR=`pwd`\n")
         f.write("cd $DIR\n")
         f.write("vasp\n")
-        
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')       
         f.close()
 
 if __name__ == '__main__':
