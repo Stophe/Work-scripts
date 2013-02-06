@@ -67,7 +67,7 @@ def main():
                         print "Updating files in %s" % path
                         system("cp POSCAR old_POSCAR")
                         system("cp CONTCAR old_CONTCAR")
-                        if len(Contcar(path).supercell) > 0:
+                        if len(Contcar(path).supercell.atoms) > 0:
                             system("cp CONTCAR POSCAR")
                         else:
                             print "Strange CONTCAR in %s" % path
@@ -77,8 +77,7 @@ def main():
                     
             else:
                 while True:
-                    q = raw_input("Resubmit file in %s?\n(y/n or Y/N to apply to all), RU\
-                     to resubmit and update unfinished ones: " % path)
+                    q = raw_input("Resubmit file in %s?\n(y/n or Y/N to apply to all), RU to resubmit and update unfinished ones: " % path)
                     if q == 'Y':
                         resubmit_all = True
                         print"Submitting file in %s" % path
