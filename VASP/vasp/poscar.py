@@ -95,7 +95,10 @@ class Poscar(object):
             self.version = 5
             self.symbols = getline("%s/POSCAR" % self.path, 6).split()
             self.counts = _int_list(getline("%s/POSCAR" % self.path, 7).split())
-
+        
+        if len(self.counts) == 0:
+            print "Error in Poscar at: %s" % self.path
+            exit()
         maximum = self.counts[0]
         for count in self.counts:
             if count > maximum:
