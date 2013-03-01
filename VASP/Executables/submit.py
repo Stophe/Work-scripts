@@ -94,6 +94,21 @@ def main():
                         break
                     elif q == "RU":
                         resubmit_unfinished = True
+                        if program == "vasp":
+                            outcar = Outcar(path)
+                            if outcar.total_cpu_time > 0:
+                                pass
+                            else:
+                                print "Updating files in %s" % path
+                                system("cp POSCAR old_POSCAR")
+                                system("cp CONTCAR old_CONTCAR")
+                                if len(Contcar(path).supercell.atoms) > 0:
+                                    system("cp CONTCAR POSCAR")
+                                else:
+                                    print "Strange CONTCAR in %s" % path
+                                system("cp OSZICAR old_OSZICAR")
+                                print"Submitting file in %s" % path
+                                system("%s %s" % (submit_command, run_file))
                         break
                     else:
                         print "%s is not a valid choice." % q
