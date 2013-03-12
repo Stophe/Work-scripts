@@ -47,7 +47,11 @@ class Outcar(object):
                 self.kpoints = (int(ln[0]), int(ln[1]), int(ln[2]))
             elif 'NKPTS' in line:
                 self.nkpts = int(line.split()[3])
-            elif 'volume of cell :' in line:
+
+        f.seek(-10000, 2)
+
+        for line in f:
+            if 'volume of cell :' in line:
                 self.volume = float(line.split()[4])
             elif 'Total CPU time' in line:
                 self.total_cpu_time = line.split()[5]
