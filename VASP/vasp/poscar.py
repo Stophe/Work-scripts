@@ -94,7 +94,10 @@ class Poscar(object):
         else:
             self.version = 5
             self.symbols = getline("%s/POSCAR" % self.path, 6).split()
-            self.counts = _int_list(getline("%s/POSCAR" % self.path, 7).split())
+            try:
+                self.counts = _int_list(getline("%s/POSCAR" % self.path, 7).split())
+            except:
+                print getline("%s/POSCAR" % self.path, 7)
         
         if len(self.counts) == 0:
             print "Error in Poscar at: %s" % self.path

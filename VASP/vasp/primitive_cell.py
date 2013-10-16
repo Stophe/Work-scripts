@@ -42,8 +42,13 @@ class PrimitiveCell(object):
 
     def update_matrix(self):
         self.matrix = asmatrix(array([self.a1, self.a2, self.a3]))
+        
+    def set(self, i, j, value):
+        self.matrix[i, j] = value 
 
 
 if __name__ == '__main__':
     pc = PrimitiveCell(array([1.00000, 0, 0]), array([0, 1, 0]), array([0, 0, 1]))
+    print pc
+    pc.set(2,2,4)
     print pc

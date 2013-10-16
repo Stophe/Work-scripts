@@ -66,7 +66,7 @@ class SuperCell:
 
     def sort(self):
         new_list = sorted(self.atoms, key=lambda atom: atom.symbol,
-                          reverse=True)
+                          reverse=False)
         adatoms = []
         others = []
         for atom in new_list:

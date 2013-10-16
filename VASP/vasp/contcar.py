@@ -32,6 +32,7 @@ class Contcar(object):
         self.symbols = []
         self.supercell = SuperCell()
         self.surface_area = 0
+        self.coa = 0
         try:
             self._extract_data()
         except:
@@ -82,6 +83,7 @@ class Contcar(object):
                 new_lst.append(int(item))
             return new_lst
 
+        self.coa = getline("%s/CONTCAR" % self.path, 5).split()[2]
 
         if getline("%s/CONTCAR" % self.path, 6).strip().isdigit():
             self.version = 4
