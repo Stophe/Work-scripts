@@ -129,6 +129,11 @@ def main():
                     col_titles.append('a0 [Ang]')
                 results.append(contcar.supercell.a0)
             
+            elif argument == 'coa':
+                if 'c/a' not in col_titles:
+                    col_titles.append('c/a')
+                results.append(contcar.supercell.coa)
+            
             elif argument == 'surface_area':
                 if 'Surface Area [Ang^2]' not in col_titles:
                     col_titles.append('Surface Area [Ang^2]')
