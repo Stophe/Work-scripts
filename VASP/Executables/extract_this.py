@@ -54,7 +54,7 @@ def contcar_is_needed():
     no otherwise.
     """
     possible_settings = ['title', 'formula_unit', 'surface_area',
-                         'lattice_constant', 'all_energies',
+                         'lattice_constant', 'coa', 'all_energies',
                          'dos_per_atom', 'adatom_pos']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
@@ -132,7 +132,10 @@ def main():
             elif argument == 'coa':
                 if 'c/a' not in col_titles:
                     col_titles.append('c/a')
-                results.append(contcar.coa)
+                try:
+                    results.append(contcar.coa)
+                except:
+                    print contcar.path
             
             elif argument == 'surface_area':
                 if 'Surface Area [Ang^2]' not in col_titles:

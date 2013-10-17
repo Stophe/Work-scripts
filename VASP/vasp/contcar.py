@@ -83,8 +83,6 @@ class Contcar(object):
                 new_lst.append(int(item))
             return new_lst
 
-        self.coa = getline("%s/CONTCAR" % self.path, 5).split()[2]
-
         if getline("%s/CONTCAR" % self.path, 6).strip().isdigit():
             self.version = 4
             self.counts = _int_list(getline("%s/CONTCAR" % self.path, 6).split())
@@ -131,6 +129,7 @@ class Contcar(object):
         a2 = array([a2[0], a2[1], a2[2]])
         a3 = _float_list(getline("%s/CONTCAR" % self.path, 5).split())
         a3 = array([a3[0], a3[1], a3[2]])
+        self.coa = norm(a3)
         self.surface_area = self.supercell.a0**2 * norm(cross(a1, a2))
         self.supercell.primitive_cell = PrimitiveCell(a1, a2, a3)
         f = open("%s/CONTCAR" % self.path)
