@@ -48,7 +48,10 @@ class Outcar(object):
             elif 'NKPTS' in line:
                 self.nkpts = int(line.split()[3])
 
-        f.seek(-10000, 2)
+        try:
+            f.seek(-10000, 2)
+        except:
+            print self.path
 
         for line in f:
             if 'volume of cell :' in line:
