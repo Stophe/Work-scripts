@@ -8,6 +8,7 @@ from numpy import array
 from numpy import cross
 from numpy.linalg import norm
 from sys import exc_info
+import numpy as np
 
 from vasp.supercell import SuperCell
 from vasp.primitive_cell import PrimitiveCell
@@ -149,6 +150,21 @@ class Contcar(object):
             pos_starting_line += self.counts[i]
 
         f.close()
+    
+    def distance(self, r1, r2):
+        dimensions = np.array([np.abs(self.supercell.primitive_cell.a1 * self.supercell.a0),
+                               np.abs(self.supercell.primitive_cell.a2 * self.supercell.a0),
+                               np.abs(self.supercell.primitive_cell.a3 * self.supercell.a0),
+                               ])
+        delta = np.abs(r1 - r2)
+        delta = np.where(delta > 5.0 * dimensions, dimensions - delta, delta)
+        return np.sqrt((delta ** 2).sum(axis=-1))
+    
+    def calculate_average_u(self):
+        metals = ['Al', 'Sc']
+        other = ['N']
+        
+        print self.distance(self.supercell.atoms[0].position, self.supercell.atoms[1].position)
 
 if __name__ == '__main__':
     contcar = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")

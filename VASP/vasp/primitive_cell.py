@@ -52,3 +52,5 @@ if __name__ == '__main__':
     print pc
     pc.set(2,2,4)
     print pc
+    print pc.matrix[1]
+    print pc.a1
