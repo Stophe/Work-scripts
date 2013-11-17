@@ -29,6 +29,9 @@ class SuperCell:
     def __repr__(self):
         return self.atoms
 
+    def __str__(self):
+        return self.atoms
+
     def copy(self):
         return deepcopy(self)
 

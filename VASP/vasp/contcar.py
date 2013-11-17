@@ -69,8 +69,19 @@ class Contcar(object):
         else:
             return 0
 
-    def _extract_data(self):
+    def _convert_to_direct_coordinates(self):
+        print "Running convertion"
+        new_sc = SuperCell()
+        for atom in self.supercell.atoms:
+            #new_sc.add()
+            #print atom
+            new_sc.add(atom.symbol, self.supercell.convert_to_direct(atom.position))
+        #for atom in new_sc.atoms:
+        #    print atom
+        self.supercell.atoms = new_sc.atoms
+        self.direct_coords = True
 
+    def _extract_data(self):
         def _float_list(lst):
             new_lst = []
             for item in lst:
@@ -129,6 +140,8 @@ class Contcar(object):
         a2 = array([a2[0], a2[1], a2[2]])
         a3 = _float_list(getline("%s/CONTCAR" % self.path, 5).split())
         a3 = array([a3[0], a3[1], a3[2]])
+        if self.supercell.a0 < 0:
+            a0 = 1
         self.coa = norm(a3)
         self.surface_area = self.supercell.a0**2 * norm(cross(a1, a2))
         self.supercell.primitive_cell = PrimitiveCell(a1, a2, a3)
@@ -149,6 +162,8 @@ class Contcar(object):
             pos_starting_line += self.counts[i]
 
         f.close()
+        if not self.direct_coords:
+            self._convert_to_direct_coordinates()
 
 if __name__ == '__main__':
     contcar = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")
