@@ -142,7 +142,7 @@ class Contcar(object):
         a3 = _float_list(getline("%s/CONTCAR" % self.path, 5).split())
         a3 = array([a3[0], a3[1], a3[2]])
         if self.supercell.a0 < 0:
-            a0 = 1
+            self.supercell.a0 = 1
         self.coa = norm(a3)
         self.surface_area = self.supercell.a0**2 * norm(cross(a1, a2))
         self.supercell.primitive_cell = PrimitiveCell(a1, a2, a3)
@@ -171,28 +171,33 @@ class Contcar(object):
         return delta
     
     def calculate_average_u(self, print_all=False):
-        metals = ['Al', 'Sc']
+        metals = ['Al', 'Sc', 'In', 'Y']
         other = ['N']
         u_list = []
         for atom1 in self.supercell.atoms:
             if atom1.symbol in metals:
-                u = 0
+                u = []
                 for atom2 in self.supercell.atoms:
                     if atom2.symbol in other:
                         if (atom2.position[2] > atom1.position[2] 
                             and self.distance(array([atom1.position[0],atom1.position[1],0]),
                                               array([atom2.position[0],atom2.position[1],0])) < 1):
-                            u = self.distance(atom1.position, atom2.position) / (self.coa * self.supercell.a0)
+                            d = self.distance(atom1.position, atom2.position) 
+                            if d < self.coa * self.supercell.a0 * 0.9:
+                                u = d / (self.coa * self.supercell.a0)
                         elif (atom2.position[2] + 1 > atom1.position[2] 
                             and self.distance(array([atom1.position[0],atom1.position[1],0]),
                                               array([atom2.position[0],atom2.position[1],0])) < 1):
-                            u = self.distance(atom1.position, atom2.position + array([0, 0, 1])) / (self.coa * self.supercell.a0)
+                            d = self.distance(atom1.position, atom2.position + array([0, 0, 1]))
+                            if d < self.coa * self.supercell.a0 * 0.9: # Need to figure out this cut-off
+                                u = d / (self.coa * self.supercell.a0)
                 if u:
                     u_list.append(u)
                 else:
                     print "Found no atom to compare with"
         if print_all:
             return u_list
+        print self.coa * self.supercell.a0
         return sum(u_list) / len(u_list)
 
 if __name__ == '__main__':
