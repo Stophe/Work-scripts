@@ -170,7 +170,7 @@ class Contcar(object):
         delta = np.linalg.norm(self.supercell.convert_to_real(r1 - r2))
         return delta
     
-    def calculate_average_u(self, all=False):
+    def calculate_average_u(self, print_all=False):
         metals = ['Al', 'Sc']
         other = ['N']
         u_list = []
@@ -191,7 +191,7 @@ class Contcar(object):
                     u_list.append(u)
                 else:
                     print "Found no atom to compare with"
-        if all:
+        if print_all:
             print u_list
         print sum(u_list) / len(u_list)
 

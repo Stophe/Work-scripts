@@ -55,7 +55,7 @@ def contcar_is_needed():
     """
     possible_settings = ['title', 'formula_unit', 'surface_area',
                          'lattice_constant', 'coa', 'all_energies',
-                         'dos_per_atom', 'adatom_pos']
+                         'dos_per_atom', 'adatom_pos', 'average_u']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -136,6 +136,11 @@ def main():
                     results.append(contcar.coa)
                 except:
                     print contcar.path
+                    
+            elif argument == 'average_u':
+                if '<u>' not in col_titles:
+                    col_titles.append('<u>')
+                results.append(contcar.calculate_average_u())
             
             elif argument == 'surface_area':
                 if 'Surface Area [Ang^2]' not in col_titles:
