@@ -167,19 +167,33 @@ class Contcar(object):
             self._convert_to_direct_coordinates()
     
     def distance(self, r1, r2):
-        dimensions = np.array([np.abs(self.supercell.primitive_cell.a1 * self.supercell.a0),
-                               np.abs(self.supercell.primitive_cell.a2 * self.supercell.a0),
-                               np.abs(self.supercell.primitive_cell.a3 * self.supercell.a0),
-                               ])
-        delta = np.abs(r1 - r2)
-        delta = np.where(delta > 5.0 * dimensions, dimensions - delta, delta)
-        return np.sqrt((delta ** 2).sum(axis=-1))
+        delta = np.linalg.norm(self.supercell.convert_to_real(r1 - r2))
+        return delta
     
-    def calculate_average_u(self):
+    def calculate_average_u(self, all=False):
         metals = ['Al', 'Sc']
         other = ['N']
-        
-        print self.distance(self.supercell.atoms[0].position, self.supercell.atoms[1].position)
+        u_list = []
+        for atom1 in self.supercell.atoms:
+            if atom1.symbol in metals:
+                u = 0
+                for atom2 in self.supercell.atoms:
+                    if atom2.symbol in other:
+                        if (atom2.position[2] > atom1.position[2] 
+                            and self.distance(array([atom1.position[0],atom1.position[1],0]),
+                                              array([atom2.position[0],atom2.position[1],0])) < 1):
+                            u = self.distance(atom1.position, atom2.position) / (self.coa * self.supercell.a0)
+                        elif (atom2.position[2] + 1 > atom1.position[2] 
+                            and self.distance(array([atom1.position[0],atom1.position[1],0]),
+                                              array([atom2.position[0],atom2.position[1],0])) < 1):
+                            u = self.distance(atom1.position, atom2.position + array([0, 0, 1])) / (self.coa * self.supercell.a0)
+                if u:
+                    u_list.append(u)
+                else:
+                    print "Found no atom to compare with"
+        if all:
+            print u_list
+        print sum(u_list) / len(u_list)
 
 if __name__ == '__main__':
     contcar = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")

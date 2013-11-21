@@ -268,10 +268,10 @@ class SuperCell:
             atom.position = atom.position + array([to[0], to[1], to[2]])
 
     def convert_to_real(self, array):
-        return ravel(array * self.primitive_cell.matrix)
+        return (array * self.primitive_cell.matrix * self.a0)[0]
     
     def convert_to_direct(self, array):
-        return ravel(array * inv(self.primitive_cell.matrix))
+        return (array * inv(self.primitive_cell.matrix*self.a0))[0]
     
 
 def test():
