@@ -192,8 +192,8 @@ class Contcar(object):
                 else:
                     print "Found no atom to compare with"
         if print_all:
-            print u_list
-        print sum(u_list) / len(u_list)
+            return u_list
+        return sum(u_list) / len(u_list)
 
 if __name__ == '__main__':
     contcar = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")
