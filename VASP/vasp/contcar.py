@@ -74,11 +74,7 @@ class Contcar(object):
         print "Running convertion"
         new_sc = SuperCell()
         for atom in self.supercell.atoms:
-            #new_sc.add()
-            #print atom
             new_sc.add(atom.symbol, self.supercell.convert_to_direct(atom.position))
-        #for atom in new_sc.atoms:
-        #    print atom
         self.supercell.atoms = new_sc.atoms
         self.direct_coords = True
 
@@ -176,25 +172,25 @@ class Contcar(object):
         u_list = []
         for atom1 in self.supercell.atoms:
             if atom1.symbol in metals:
-                u = []
                 for atom2 in self.supercell.atoms:
+                    d = 0.
                     if atom2.symbol in other:
                         if (atom2.position[2] > atom1.position[2] 
-                            and self.distance(array([atom1.position[0],atom1.position[1],0]),
-                                              array([atom2.position[0],atom2.position[1],0])) < 1):
-                            d = self.distance(atom1.position, atom2.position) 
-                            if d < self.coa * self.supercell.a0 * 0.9:
-                                u = d / (self.coa * self.supercell.a0)
-                        elif (atom2.position[2] + 1 > atom1.position[2] 
-                            and self.distance(array([atom1.position[0],atom1.position[1],0]),
-                                              array([atom2.position[0],atom2.position[1],0])) < 1):
-                            d = self.distance(atom1.position, atom2.position + array([0, 0, 1]))
-                            if d < self.coa * self.supercell.a0 * 0.9: # Need to figure out this cut-off
-                                u = d / (self.coa * self.supercell.a0)
-                if u:
-                    u_list.append(u)
-                else:
+                            and self.distance(array([atom1.position[0], atom1.position[1], 0]),
+                                              array([atom2.position[0], atom2.position[1], 0])) < 1):
+                            new_d = self.distance(atom1.position, atom2.position) 
+                            if d == 0 or new_d < d:
+                                d = new_d
+                        elif (atom2.position[2] + 1. > atom1.position[2] 
+                            and self.distance(array([atom1.position[0], atom1.position[1], 0]),
+                                              array([atom2.position[0], atom2.position[1], 0])) < 1 ):
+                            new_d = self.distance(atom1.position, atom2.position + array([0, 0, 1.]))
+                            if d == 0 or new_d < d: 
+                                d = new_d
+                if d == 0:
                     print "Found no atom to compare with"
+                else:
+                    u_list.append(d )#/ (self.coa * self.supercell.a0))
         if print_all:
             return u_list
         print self.coa * self.supercell.a0
