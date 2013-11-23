@@ -137,11 +137,11 @@ class Contcar(object):
         a2 = array([a2[0], a2[1], a2[2]])
         a3 = _float_list(getline("%s/CONTCAR" % self.path, 5).split())
         a3 = array([a3[0], a3[1], a3[2]])
-        if self.supercell.a0 < 0:
-            self.supercell.a0 = 1
-        self.coa = norm(a3)
-        self.surface_area = self.supercell.a0**2 * norm(cross(a1, a2))
+        self.coa = norm(a3)       
         self.supercell.primitive_cell = PrimitiveCell(a1, a2, a3)
+        if self.supercell.a0 < 0:
+            self.supercell.a0 = (self.supercell.a0/np.linalg.det(self.supercell.primitive_cell.matrix))**(1./3.)
+        self.surface_area = self.supercell.a0**2 * norm(cross(a1, a2))
         f = open("%s/CONTCAR" % self.path)
         for i in range(0, len(self.counts)):
             for j in range(pos_starting_line,
@@ -166,35 +166,59 @@ class Contcar(object):
         delta = np.linalg.norm(self.supercell.convert_to_real(r1 - r2))
         return delta
     
-    def calculate_average_u(self, print_all=False):
+    def _calculate_sqs_repetitions(self, metals, other):
+        scx = 0
+        scy = 0
+        scz = 0
+        
+        for atom in self.supercell.atoms:
+            if (atom.symbol in metals
+                and self.distance(array([0, 0, 0]),
+                                  array([atom.position[0], atom.position[1], 0])) < 1):
+                scz += 1
+        for atom in self.supercell.atoms:
+            if (atom.symbol in metals
+                and self.distance(array([0, 0, 0]),
+                                  array([0, atom.position[1], atom.position[2]])) < 1):
+                scx += 1
+        for atom in self.supercell.atoms:
+            if (atom.symbol in metals
+                and self.distance(array([0, 0, 0]),
+                                  array([atom.position[0], 0, atom.position[2]])) < 1):
+                scy += 1
+
+        return (scx, scy, scz)
+    
+    def calculate_average_u(self, return_all=False):
         metals = ['Al', 'Sc', 'In', 'Y']
         other = ['N']
+        sqs_repetitions = self._calculate_sqs_repetitions(metals, other)
         u_list = []
         for atom1 in self.supercell.atoms:
             if atom1.symbol in metals:
+                d = 0.
                 for atom2 in self.supercell.atoms:
-                    d = 0.
                     if atom2.symbol in other:
                         if (atom2.position[2] > atom1.position[2] 
                             and self.distance(array([atom1.position[0], atom1.position[1], 0]),
-                                              array([atom2.position[0], atom2.position[1], 0])) < 1):
+                                              array([atom2.position[0], atom2.position[1], 0])) < 0.5):
                             new_d = self.distance(atom1.position, atom2.position) 
                             if d == 0 or new_d < d:
                                 d = new_d
                         elif (atom2.position[2] + 1. > atom1.position[2] 
                             and self.distance(array([atom1.position[0], atom1.position[1], 0]),
-                                              array([atom2.position[0], atom2.position[1], 0])) < 1 ):
+                                              array([atom2.position[0], atom2.position[1], 0])) < 0.5 ):
                             new_d = self.distance(atom1.position, atom2.position + array([0, 0, 1.]))
                             if d == 0 or new_d < d: 
                                 d = new_d
                 if d == 0:
                     print "Found no atom to compare with"
                 else:
-                    u_list.append(d )#/ (self.coa * self.supercell.a0))
-        if print_all:
+                    u_list.append(d / (self.coa * self.supercell.a0) * sqs_repetitions[2])
+        if return_all:
             return u_list
-        print self.coa * self.supercell.a0
-        return sum(u_list) / len(u_list)
+        else:
+            return sum(u_list) / len(u_list)
 
 if __name__ == '__main__':
     contcar = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")
