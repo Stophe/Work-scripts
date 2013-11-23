@@ -173,18 +173,22 @@ class Contcar(object):
         
         for atom in self.supercell.atoms:
             if (atom.symbol in metals
-                and self.distance(array([0, 0, 0]),
-                                  array([atom.position[0], atom.position[1], 0])) < 1):
-                scz += 1
-        for atom in self.supercell.atoms:
-            if (atom.symbol in metals
-                and self.distance(array([0, 0, 0]),
-                                  array([0, atom.position[1], atom.position[2]])) < 1):
+                  and self.distance(array([0, 0, 0]),
+                                  array([atom.position[0], atom.position[1], atom.position[2]])) < 0.5):
                 scx += 1
-        for atom in self.supercell.atoms:
-            if (atom.symbol in metals
-                and self.distance(array([0, 0, 0]),
-                                  array([atom.position[0], 0, atom.position[2]])) < 1):
+                scy += 1
+                scz += 1
+            elif (atom.symbol in metals
+                  and self.distance(array([0, 0, 0]),
+                                  array([atom.position[0], atom.position[1], 0])) < 0.5):
+                scz += 1
+            elif (atom.symbol in metals
+                  and self.distance(array([0, 0, 0]),
+                                  array([0, atom.position[1], atom.position[2]])) < 0.5):
+                scx += 1
+            elif (atom.symbol in metals
+                  and self.distance(array([0, 0, 0]),
+                                  array([atom.position[0], 0, atom.position[2]])) < 0.5):
                 scy += 1
 
         return (scx, scy, scz)
