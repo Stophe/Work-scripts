@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import numpy as np
 from numpy import array
 from numpy import dot
 from numpy import cross
@@ -90,7 +91,7 @@ class SuperCell:
 
     def add_vacuum(self, vacuum, direction=2): 
         # Adds vacuum layer given in Angstrom		
-        norm_a_real = self.a0 * norm(self.primitive_cell.matrix[direction])
+        norm_a_real = self.a0 * np.linalg.norm(self.primitive_cell.matrix[direction])
         displacement_factor = (vacuum - (1 - self.get_highest_position()) * norm_a_real) / norm_a_real + 1
 
         for atom in self.atoms:
@@ -208,32 +209,32 @@ class SuperCell:
         new_supercell = deepcopy(self)
         new_a3_direct = self.convert_to_direct(new_direction)        
         
-        origin_at = filter(lambda Atom: norm(Atom.position) == 0, self.atoms)[0]
+        origin_at = filter(lambda Atom: np.linalg.norm(Atom.position) == 0, self.atoms)[0]
         
         for atom in self.atoms:
-            if (round(norm(cross(atom.position, new_a3_direct)), 8) == 0
+            if (round(np.linalg.norm(cross(atom.position, new_a3_direct)), 8) == 0
                 and atom.symbol == origin_at.symbol 
-                and norm(atom.position) != 0
-                and norm(atom.position) < norm(new_a3_direct)):
+                and np.linalg.norm(atom.position) != 0
+                and np.linalg.norm(atom.position) < np.linalg.norm(new_a3_direct)):
                 new_a3_direct = atom.position
         new_a3 = self.convert_to_real(new_a3_direct)
         
-        new_a2_direct = array([1, 1, 1])
+        new_a2_direct = np.array([1, 1, 1])
         for atom in self.atoms:
             if (round(dot(atom.position, new_a3_direct), 8) == 0 
                 and atom.symbol == origin_at.symbol 
-                and norm(atom.position) != 0
-                and norm(atom.position) < norm(new_a2_direct)):
+                and np.linalg.norm(atom.position) != 0
+                and np.linalg.norm(atom.position) < np.linalg.norm(new_a2_direct)):
                 new_a2_direct = atom.position
         new_a2 = self.convert_to_real(new_a2_direct)
 
         new_a1_direct = self.convert_to_direct(cross(self.convert_to_real(new_a2_direct),
                                                      self.convert_to_real(new_a3_direct)))
         for atom in self.atoms:
-            if (round(norm(cross(atom.position, new_a1_direct)),8) == 0 
+            if (round(np.linalg.norm(cross(atom.position, new_a1_direct)),8) == 0 
                 and atom.symbol == origin_at.symbol 
-                and norm(atom.position) < norm(new_a1_direct)
-                and norm(atom.position) != 0):
+                and np.linalg.norm(atom.position) < norm(new_a1_direct)
+                and np.linalg.norm(atom.position) != 0):
                 new_a1_direct = atom.position
                 print new_a1_direct
         new_a1 = self.convert_to_real(new_a1_direct)
@@ -265,13 +266,13 @@ class SuperCell:
         
     def transpose_basis(self, to):
         for atom in self.atoms:
-            atom.position = atom.position + array([to[0], to[1], to[2]])
+            atom.position = atom.position + np.array([to[0], to[1], to[2]])
 
     def convert_to_real(self, array):
-        return (array * self.primitive_cell.matrix * self.a0)[0]
+        return np.squeeze(np.asarray(array * self.primitive_cell.matrix * self.a0))
     
     def convert_to_direct(self, array):
-        return (array * inv(self.primitive_cell.matrix*self.a0))[0]
+        return np.squeeze(np.asarray(array * inv(self.primitive_cell.matrix*self.a0)))
     
 
 def test():
@@ -288,7 +289,7 @@ def test():
     supercell = SuperCell(a0,primitive_cell,basis)
     supercell.save_structure('/Users/chtho', 'title', relaxation=False)
     #super_cell.expand_3D((0,0,4))
-    new_supercell = supercell.change_surface(array([1., 1., 1.]))
+    new_supercell = supercell.change_surface(np.array([1., 1., 1.]))
 #    print super_cell.primitive_cell
 #    #super_cell.sort()
 #    for at in super_cell.atoms: print at
