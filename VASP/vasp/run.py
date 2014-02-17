@@ -132,10 +132,10 @@ class Run(object):
         f.write("#SBATCH -J %s\n" % self.title)
         f.write("#SBATCH -t %s\n" % self.walltime)
         f.write("#SBATCH -N %i\n" % self.nodes)
-        f.write("#SBATCH %s\n" % self.project)
+        f.write("#SBATCH -A %s\n" % self.project)
         f.write('\n')
         f.write("#Run calculation\n")
-        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+        f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
         f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
@@ -151,7 +151,7 @@ class Run(object):
         f.write("#SBATCH -A %s\n" % self.project)
         f.write('\n')
         f.write("#Run calculation\n")
-        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+        f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
         f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
@@ -167,7 +167,7 @@ class Run(object):
         f.write("#SBATCH -A %s -p green\n" % self.project)
         f.write('\n')
         f.write("#Run calculation\n")
-        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+        f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
         f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
@@ -185,7 +185,7 @@ class Run(object):
         f.write('\n')
         f.write("cp CONTCAR POSCAR\n")
         f.write("#Run calculation\n")
-        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+        f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
         f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
@@ -201,7 +201,7 @@ class Run(object):
         f.write("#SBATCH -U %s\n" % self.project)
         f.write('\n')
         f.write("#Run calculation\n")
-        f.write("mpprun /software/apps/vasp/%s/build01/vasp-half" %
+        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
                 (self.vasp_version))
         f.write('\n')
         f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
