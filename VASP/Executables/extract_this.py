@@ -54,7 +54,7 @@ def contcar_is_needed():
     no otherwise.
     """
     possible_settings = ['title', 'formula_unit', 'surface_area',
-                         'lattice_constant', 'coa', 'all_energies',
+                         'lattice_constant', 'alat', 'coa', 'all_energies',
                          'dos_per_atom', 'adatom_pos', 'average_u']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
@@ -124,7 +124,7 @@ def main():
                     col_titles.append('Title')
                 results.append(contcar.title)
             
-            elif argument == 'lattice_constant':
+            elif argument == 'lattice_constant' or argument =='alat':
                 if 'a0 [Ang]' not in col_titles:
                     col_titles.append('a0 [Ang]')
                 results.append(contcar.supercell.a0)
