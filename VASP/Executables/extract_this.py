@@ -323,7 +323,7 @@ def main():
 
     
     if 'print' in sys.argv: 
-        system('/bin/cat "%s/results.csv"' % current_path)
+        system('column -s, -t "%s/results.csv"' % current_path)
 
 if __name__ == '__main__':
 #    if 'time_test' in sys.argv:
