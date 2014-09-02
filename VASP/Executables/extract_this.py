@@ -293,8 +293,9 @@ def main():
                 
             elif argument == 'polarization':
                 if 'PionX' not in col_titles:
-                    col_titles.append('PionX [eAng],PionY [eAng],PionZ [eAng],PelX [eAng],PelY [eAng],PelZ [eAng]')
-                results.append(doscar.polarization[0] + doscar.polarization[1])
+                    col_titles = col_titles + ['PionX [eAng]', 'PionY [eAng]', 'PionZ [eAng]',
+                                                 'PelX [eAng]', 'PelY [eAng]', 'PelZ [eAng]']
+                results = results + outcar.polarization[0] + outcar.polarization[1]
                      
             elif argument == 'ic_piezoelectric_tensor':
                 f = open('%s/ic_pieoelectric_tensor.csv' % current_path, 'w')

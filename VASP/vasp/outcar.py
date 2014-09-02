@@ -26,7 +26,13 @@ class Outcar(object):
         self.polarization = [[],[]]
         self._extract_data()
         self.total_kpoints = sum(self.kpoints)
-
+    
+    def _float_list(self, lst):
+        new_lst = []
+        for item in lst:
+            new_lst.append(float(item))
+        return new_lst
+    
     def _extract_data(self):
         # Extracts the data from the OUTCAR file
         f = open("%s/OUTCAR" % (self.path), 'r')
@@ -49,10 +55,10 @@ class Outcar(object):
             elif 'NKPTS' in line:
                 self.nkpts = int(line.split()[3])
             elif 'Ionic dipole moment: p[ion]=(' in line:
-                l = line.split()[4:]
-                self.polariation[0] = l
+                l = self._float_list(line.split()[4:7])
+                self.polarization[0] = l
             elif 'Total electronic dipole moment: p[elc]=(' in line:
-                l = line.split()[5:]
+                l = self._float_list(line.split()[5:8])
                 self.polarization[1] = l
 
         try:
@@ -71,23 +77,17 @@ class Outcar(object):
 
     
     def ic_piezo_tensor(self):
-        def _float_list(lst):
-            new_lst = []
-            for item in lst:
-                new_lst.append(float(item))
-            return new_lst
-
         ic_piezo_tensor = [[],[],[]] # E-field in x, y, z, respectively
         
         f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
             if ' PIEZOELECTRIC TENSOR (including local field effects) (C/m^2)' in line:
                 for i in range(2): f.next()
-                l = _float_list(f.next().split()[1:7])
+                l = self._float_list(f.next().split()[1:7])
                 ic_piezo_tensor[0] = l 
-                l = _float_list(f.next().split()[1:7])
+                l = self._float_list(f.next().split()[1:7])
                 ic_piezo_tensor[1] = l
-                l = _float_list(f.next().split()[1:7])
+                l = self._float_list(f.next().split()[1:7])
                 ic_piezo_tensor[2] = l 
                 break
                 
