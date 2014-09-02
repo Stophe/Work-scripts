@@ -14,7 +14,7 @@ class Incar(object):
                  sigma=None, prec=None, nelmin=None, ediff=None, ediffg=None,
                  nsw=None, ibrion=None, isif=None, ispin=None, magmom=None,
                  lwave=None, lcharge=None, lorbit=None, nbands=None, images=None,
-                 spring=None, lasph=None, lcalceps=None):
+                 spring=None, lasph=None, lcalceps=None, lcalcpol=None):
         '''
         Constructor
         '''
@@ -36,6 +36,7 @@ class Incar(object):
         self.lwave = lwave
         self.lcharge = lcharge
         self.lcalceps = lcalceps
+        self.lcalcpol = lcalcpol
         self.lorbit = lorbit
         self.images = images  # Sets images for elastic band calculations. StrtF 00, StpF XX = images + 1
         self.spring = spring  # Nudged elastic band when negative. Default = -5
