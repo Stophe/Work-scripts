@@ -49,13 +49,15 @@ class Outcar(object):
                 self.nkpts = int(line.split()[3])
 
         try:
-            f.seek(-10000, 2)
+            f.seek(-1000, 2)
         except:
             print self.path
 
         for line in f:
-            if 'volume of cell :' in line:
+            if 'volume of' in line:
+                print line
                 self.volume = float(line.split()[4])
             elif 'Total CPU time' in line:
+                print line
                 self.total_cpu_time = line.split()[5]
         f.close()
