@@ -19,7 +19,7 @@ def outcar_is_needed():
     no otherwise.
     """
     possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom', 'encut',
-                         'kpoints', 'total_kpoints', 'nodes', 'total_nr_of_ions', 'ic_piezoelectric_tensor', 'e33']
+                         'kpoints', 'total_kpoints', 'nodes', 'total_nr_of_ions', 'ic_piezoelectric_tensor', 'polarization']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -30,7 +30,7 @@ def oszicar_is_needed():
     """Checks if information from the OSZICAR is needed. Returns True if it is,
     no otherwise.
     """
-    possible_settings = ['total_energy', 'all_energies', 'magmom', 'c33']
+    possible_settings = ['total_energy', 'all_energies', 'magmom']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -55,7 +55,7 @@ def contcar_is_needed():
     """
     possible_settings = ['title', 'formula_unit', 'surface_area',
                          'lattice_constant', 'alat', 'coa', 'all_energies',
-                         'dos_per_atom', 'adatom_pos', 'average_u', 'e33', 'c33']
+                         'dos_per_atom', 'adatom_pos', 'average_u']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -291,15 +291,18 @@ def main():
                     line += count
                     i += 1  # Choose correct symbol
                 
-            elif argument == 'e33':
-                pass
-            elif argument == 'c33':
-                pass
+            elif argument == 'polarization':
+                if 'PionX' not in col_titles:
+                    col_titles.append('PionX [eAng],PionY [eAng],PionZ [eAng],PelX [eAng],PelY [eAng],PelZ [eAng]')
+                results.append(doscar.polarization[0] + doscar.polarization[1])
+                     
             elif argument == 'ic_piezoelectric_tensor':
                 f = open('%s/ic_pieoelectric_tensor.csv' % current_path, 'w')
                 f.write('Ion-clamped Piezoelectric tensor\n')
                 f.write(outcar.ic_piezo_tensor())
                 f.close()
+                
+                
 
         if not written_header:
             result_csv_file.writerow(col_titles)

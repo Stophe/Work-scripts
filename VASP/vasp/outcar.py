@@ -23,6 +23,7 @@ class Outcar(object):
         self.encut = 0
         self.kpoints = (0, 0, 0)
         self.nkpts = 0
+        self.polarization = [[],[]]
         self._extract_data()
         self.total_kpoints = sum(self.kpoints)
 
@@ -47,6 +48,12 @@ class Outcar(object):
                 self.kpoints = (int(ln[0]), int(ln[1]), int(ln[2]))
             elif 'NKPTS' in line:
                 self.nkpts = int(line.split()[3])
+            elif 'Ionic dipole moment: p[ion]=(' in line:
+                l = line.split()[4:]
+                self.polariation[0] = l
+            elif 'Total electronic dipole moment: p[elc]=(' in line:
+                l = line.split()[5:]
+                self.polarization[1] = l
 
         try:
             f.seek(-10000, 2)
