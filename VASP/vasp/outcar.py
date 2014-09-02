@@ -61,3 +61,20 @@ class Outcar(object):
                 print line
                 self.total_cpu_time = line.split()[5]
         f.close()
+    
+    def ic_piezo_tensor(self):
+        ic_piezo_tensor = [[],[],[]] # E-field in x, y, z, respectively
+        
+        f = open("%s/OUTCAR" % (self.path), 'r')
+        for line in f:
+            if ' PIEZOELECTRIC TENSOR (including local field effects) (C/m^2)' in line:
+                break
+        f.next()
+        for line in f[:3]:
+            print line
+        ic_piezo_tensor[0] =[]
+                
+                
+        f.close()
+        return ic_piezo_tensor
+                
