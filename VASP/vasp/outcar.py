@@ -56,28 +56,40 @@ class Outcar(object):
                 self.polarization[1] = l
 
         try:
-            f.seek(-10000, 2)
+            f.seek(-1000, 2)
         except:
             print self.path
 
         for line in f:
-            if 'volume of cell :' in line:
+            if 'volume of' in line:
+                #print line
                 self.volume = float(line.split()[4])
             elif 'Total CPU time' in line:
+                #print line
                 self.total_cpu_time = line.split()[5]
         f.close()
+
     
     def ic_piezo_tensor(self):
+        def _float_list(lst):
+            new_lst = []
+            for item in lst:
+                new_lst.append(float(item))
+            return new_lst
+
         ic_piezo_tensor = [[],[],[]] # E-field in x, y, z, respectively
         
         f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
             if ' PIEZOELECTRIC TENSOR (including local field effects) (C/m^2)' in line:
+                for i in range(2): f.next()
+                l = _float_list(f.next().split()[1:7])
+                ic_piezo_tensor[0] = l 
+                l = _float_list(f.next().split()[1:7])
+                ic_piezo_tensor[1] = l
+                l = _float_list(f.next().split()[1:7])
+                ic_piezo_tensor[2] = l 
                 break
-        f.next()
-        for line in f[:3]:
-            print line
-        ic_piezo_tensor[0] =[]
                 
                 
         f.close()

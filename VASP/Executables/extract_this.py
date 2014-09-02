@@ -298,8 +298,18 @@ def main():
                      
             elif argument == 'ic_piezoelectric_tensor':
                 f = open('%s/ic_pieoelectric_tensor.csv' % current_path, 'w')
-                f.write('Ion-clamped Piezoelectric tensor\n')
-                f.write(outcar.ic_piezo_tensor())
+                f.write('Ion-clamped Piezoelectric tensor [C/m^2]\n')
+                pt = outcar.ic_piezo_tensor()
+                f.write('XX,YY,ZZ,XY,YZ,ZX\n')
+                for item in pt[0]:
+                    f.write(str(item) + ',')
+                f.write('\n')
+                for item in pt[1]:
+                    f.write(str(item) + ',')
+                f.write('\n')
+                for item in pt[2]:
+                    f.write(str(item) + ',')
+                f.write('\n')
                 f.close()
                 
                 
