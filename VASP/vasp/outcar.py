@@ -81,7 +81,7 @@ class Outcar(object):
         
         f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
-            if 'PIEZOELECTRIC TENSOR' in line and '(C/m^2)' in line:
+            if ' PIEZOELECTRIC TENSOR (including local field effects) (C/m^2)' in line:
                 for i in range(2): f.next()
                 l = self._float_list(f.next().split()[1:7])
                 ic_piezo_tensor[0] = l 
@@ -90,7 +90,15 @@ class Outcar(object):
                 l = self._float_list(f.next().split()[1:7])
                 ic_piezo_tensor[2] = l 
                 break
-                
+            elif 'PIEZOELECTRIC TENSOR  for field in x, y, z        (C/m^2)' in line:
+                for i in range(2): f.next()
+                l = self._float_list(f.next().split()[1:7])
+                ic_piezo_tensor[0] = l 
+                l = self._float_list(f.next().split()[1:7])
+                ic_piezo_tensor[1] = l
+                l = self._float_list(f.next().split()[1:7])
+                ic_piezo_tensor[2] = l 
+                break
                 
         f.close()
         return ic_piezo_tensor
