@@ -60,18 +60,17 @@ class Outcar(object):
             elif 'Total electronic dipole moment: p[elc]=(' in line:
                 l = self._float_list(line.split()[5:8])
                 self.polarization[1] = l
-
+        
+        
         try:
-            f.seek(-1000, 2)
+            f.seek(-10000, 2)
         except:
             print self.path
 
         for line in f:
-            if 'volume of' in line:
-                #print line
+            if 'volume of cell' in line:
                 self.volume = float(line.split()[4])
             elif 'Total CPU time' in line:
-                #print line
                 self.total_cpu_time = line.split()[5]
         f.close()
 
