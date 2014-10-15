@@ -298,7 +298,7 @@ def main():
                 results = results + outcar.polarization[0] + outcar.polarization[1]
                      
             elif argument == 'ic_piezoelectric_tensor':
-                f = open('%s/ic_pieoelectric_tensor.csv' % current_path, 'w')
+                f = open('%s/ic_piezoelectric_tensor.csv' % current_path, 'w')
                 f.write('Ion-clamped Piezoelectric tensor [C/m^2]\n')
                 pt = outcar.ic_piezo_tensor()
                 f.write('XX,YY,ZZ,XY,YZ,ZX\n')
