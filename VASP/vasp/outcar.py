@@ -24,6 +24,7 @@ class Outcar(object):
         self.kpoints = (0, 0, 0)
         self.nkpts = 0
         self.polarization = [[],[]]
+        self.born_charge_33_average = 0
         self._extract_data()
         self.total_kpoints = sum(self.kpoints)
     
@@ -60,6 +61,12 @@ class Outcar(object):
             elif 'Total electronic dipole moment: p[elc]=(' in line:
                 l = self._float_list(line.split()[5:8])
                 self.polarization[1] = l
+            elif 'BORN EFFECTIVE CHARGES' in line:
+                bec = []
+                f.next()
+                f.next()
+                f.next()
+                print line.split()
         
         
         try:
