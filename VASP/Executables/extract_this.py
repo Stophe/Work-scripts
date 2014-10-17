@@ -19,7 +19,8 @@ def outcar_is_needed():
     no otherwise.
     """
     possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom', 'encut',
-                         'kpoints', 'total_kpoints', 'nodes', 'total_nr_of_ions', 'ic_piezoelectric_tensor', 'polarization']
+                         'kpoints', 'total_kpoints', 'nodes', 'total_nr_of_ions', 
+                         'ic_piezoelectric_tensor', 'polarization', 'bc_33_average']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
