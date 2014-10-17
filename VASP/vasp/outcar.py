@@ -63,10 +63,11 @@ class Outcar(object):
                 self.polarization[1] = l
             elif 'BORN EFFECTIVE CHARGES' in line:
                 bec = []
-                f.next()
-                f.next()
-                f.next()
-                print line.split()
+                for i in range(2): f.next()
+                l = f.next().split()
+                bec.append([l[1], l[2], l[3]])
+                for i in range(2): f.next()
+                print f.next().split()
         
         
         try:
