@@ -219,6 +219,10 @@ class Contcar(object):
                     print "Found no atom to compare with"
                 else:
                     u_list.append(d / (self.coa * self.supercell.a0) * sqs_repetitions[2])
+        if 1 - u_list[1] < u_list[1]:
+            for i in range(len(u_list)):
+                u_list[i] = 1 - u_list[i]
+        
         if return_all:
             return u_list
         else:
