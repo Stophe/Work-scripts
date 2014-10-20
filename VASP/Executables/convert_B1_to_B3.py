@@ -7,8 +7,7 @@ from vasp.poscar import Poscar
 from os import getcwd
 
 def convert_structure():
-    #poscar = Poscar(getcwd())
-    poscar = Poscar('/Users/chtho/Desktop')
+    poscar = Poscar(getcwd())
     poscar.title = 'Converted from B1 to B3'
     sc = poscar.supercell
     
