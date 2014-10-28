@@ -38,6 +38,8 @@ class Poscar(object):
         self.surface_area = 0
         if supercell == None:
             self._extract_data()
+        if self.direct_coords == False:
+            self._convert_to_direct_coordinates()
 
     def find_adatoms(self):
         # Mark adatoms
@@ -158,6 +160,14 @@ class Poscar(object):
             pos_starting_line += self.counts[i]
 
         f.close()
+        
+    def _convert_to_direct_coordinates(self):
+        print "Running convertion"
+        new_sc = SuperCell()
+        for atom in self.supercell.atoms:
+            new_sc.add(atom.symbol, self.supercell.convert_to_direct(atom.position))
+        self.supercell.atoms = new_sc.atoms
+        self.direct_coords = True
 
     def create_file(self):
         outfile = open(self.path + '/POSCAR', 'w')
@@ -165,10 +175,10 @@ class Poscar(object):
         outfile.write(' - %s\n' % datetime.now())
         outfile.write('%f\n' % self.supercell.a0)
         outfile.write(str(self.supercell.primitive_cell))
-        outfile.write(self.supercell.atom_counts('letters'))
-        outfile.write(self.supercell.atom_counts('numbers'))
-        if self.selective_dynamics: outfile.write('\nSelective dynamics')
-        outfile.write("\nDirect\n")
+        outfile.write(" ".join(self.symbols) + '\n') # Change this
+        outfile.write(" ".join(str(x) for x in self.counts) + '\n') # and this
+        if self.selective_dynamics: outfile.write('Selective dynamics')
+        outfile.write("Direct\n")
         for atom in self.supercell.atoms:
             if self.selective_dynamics:
                 outfile.write("%s\n" % atom.str_with_relaxation())
