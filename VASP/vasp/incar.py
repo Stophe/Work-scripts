@@ -14,13 +14,14 @@ class Incar(object):
                  sigma=None, prec=None, nelmin=None, ediff=None, ediffg=None,
                  nsw=None, ibrion=None, isif=None, ispin=None, magmom=None,
                  lwave=None, lcharge=None, lorbit=None, nbands=None, images=None,
-                 spring=None, lasph=None, lcalceps=None, lcalcpol=None):
+                 spring=None, lasph=None, lcalceps=None, lcalcpol=None, ncore=None):
         '''
         Constructor
         '''
         self.path = path
         self.system = system
         self.encut = encut
+        self.ncore = ncore
         self.npar = npar  # How VASP parallelize the calculation
         self.ismear = ismear
         self.sigma = sigma
