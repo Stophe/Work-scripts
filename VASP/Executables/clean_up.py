@@ -29,6 +29,8 @@ def clean_files(path):
             system("rm %s" % join(path, item))
         elif item == "PROCAR":
             system("rm %s" % join(path, item))
+        elif "slurm" in item:
+            system("rm %s" % join(path, item))
 
 if __name__ == "__main__":
     clean_files(getcwd())
