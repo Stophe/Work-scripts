@@ -3,6 +3,8 @@ Created on Feb 27, 2012
 
 @author: chtho
 '''
+from os.path import isfile
+import gzip
 
 class Outcar(object):
     '''
@@ -36,7 +38,10 @@ class Outcar(object):
     
     def _extract_data(self):
         # Extracts the data from the OUTCAR file
-        f = open("%s/OUTCAR" % (self.path), 'r')
+        if isfile("%s/OUTCAR.gz"):
+            f = gzip.open("%/OUTCAR.gz", 'rb')
+        else:
+            f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
             if 'running on' in line and 'image' not in line:
                 self.nodes = int(float(line.split()[2]))
