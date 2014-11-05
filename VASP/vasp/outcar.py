@@ -5,6 +5,7 @@ Created on Feb 27, 2012
 '''
 from os.path import isfile
 import gzip
+import bz2
 
 class Outcar(object):
     '''
@@ -40,6 +41,8 @@ class Outcar(object):
         #: Extracts the data from the OUTCAR file
         if isfile("%s/OUTCAR.gz" % (self.path)):
             f = gzip.open("%s/OUTCAR.gz" % (self.path), 'rb')
+        elif isfile("%s/OUTCAR.bz2" % (self.path)):
+            f = bz2.BZ2File("%s/OUTCAR.bz2" % (self.path), 'rb')
         else:
             f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
