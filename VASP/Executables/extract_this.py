@@ -107,7 +107,7 @@ def main():
 
     written_header = False
 
-    paths = Find(current_path, ['OUTCAR', 'OUTCAR.gz'])
+    paths = Find(current_path, ['OUTCAR', 'OUTCAR.gz', 'OUTCAR.bz2'])
     for path in paths:
         if outcar_is_needed(): outcar = Outcar(path)
         if oszicar_is_needed(): oszicar = Oszicar(path)
