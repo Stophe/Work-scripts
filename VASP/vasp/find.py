@@ -7,11 +7,12 @@ Created on Feb 27, 2012
 import os
 
 
-def Find(path, file_name):
+def Find(path, filenames):
     paths = []
     for path, _, items in os.walk(path):
-        if file_name in items:
-            paths.append(path)
+        for filename in filenames:
+            if filename in items:
+                paths.append(path)
     return paths
 
 

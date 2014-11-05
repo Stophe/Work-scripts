@@ -37,9 +37,9 @@ class Outcar(object):
         return new_lst
     
     def _extract_data(self):
-        # Extracts the data from the OUTCAR file
-        if isfile("%s/OUTCAR.gz"):
-            f = gzip.open("%/OUTCAR.gz", 'rb')
+        #: Extracts the data from the OUTCAR file
+        if isfile("%s/OUTCAR.gz" % (self.path)):
+            f = gzip.open("%s/OUTCAR.gz" % (self.path), 'rb')
         else:
             f = open("%s/OUTCAR" % (self.path), 'r')
         for line in f:
@@ -75,13 +75,13 @@ class Outcar(object):
                 print f.next().split()
         
         
-        try:
-            f.seek(-10000, 2)
-        except:
-            print self.path
+        #try:
+        #    f.seek(-50000, 2)
+        #except:
+        #    print self.path
 
-        for line in f:
-            if 'volume of cell' in line:
+        #for line in f:
+            elif 'volume of cell' in line:
                 self.volume = float(line.split()[4])
             elif 'Total CPU time' in line:
                 self.total_cpu_time = line.split()[5]
