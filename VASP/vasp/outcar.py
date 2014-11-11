@@ -28,6 +28,7 @@ class Outcar(object):
         self.nkpts = 0
         self.polarization = [[],[]]
         self.born_charge_33_average = 0
+        self.ci_e33
         self._extract_data()
         self.total_kpoints = sum(self.kpoints)
     
@@ -69,13 +70,18 @@ class Outcar(object):
             elif 'Total electronic dipole moment: p[elc]=(' in line:
                 l = self._float_list(line.split()[5:8])
                 self.polarization[1] = l
+            elif 'PIEZOELECTRIC TENSOR  for field in x, y, z        (C/m^2)' in line:
+                for i in range(4): f.next()
+                l = f.next().split()
+                self.ci_e33 = l[3]
             elif 'BORN EFFECTIVE CHARGES' in line:
                 bec = []
                 for i in range(2): f.next()
-                l = f.next().split()
-                bec.append([l[1], l[2], l[3]])
-                for i in range(2): f.next()
-                print f.next().split()
+                for i in range(self.total_nr_of_ions):
+                    l = f.next().next().next().split()
+                    bec.append(l[3])
+                    f.next()
+                self.born_charge_33_average = sum(abs(bec))/len(bec)
         
         
         #try:

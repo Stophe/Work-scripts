@@ -20,7 +20,8 @@ def outcar_is_needed():
     """
     possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom', 'encut',
                          'kpoints', 'total_kpoints', 'nodes', 'total_nr_of_ions', 
-                         'ic_piezoelectric_tensor', 'polarization', 'bc_33_average']
+                         'ic_piezoelectric_tensor', 'polarization', 'bc_33_average',
+                         'ci_e33']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -313,6 +314,11 @@ def main():
                     f.write(str(item) + ',')
                 f.write('\n')
                 f.close()
+                
+            elif argument == 'ci_e33':
+                if 'CI e33' not in col_titles:
+                    col_titles.append('CI e33')
+                results.append(outcar.ci_e33)
             
             elif argument == 'bc_33_average':
                 if 'Born EC 33 [e]' not in col_titles:
