@@ -90,7 +90,7 @@ class Outcar(object):
             print self.path
 
         for line in f:
-            elif 'volume of cell' in line:
+            if 'volume of cell' in line:
                 self.volume = float(line.split()[4])
             elif 'Total CPU time' in line:
                 self.total_cpu_time = line.split()[5]
