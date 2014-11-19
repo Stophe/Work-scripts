@@ -174,7 +174,7 @@ class Run(object):
         f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR\n')
         f.write('bzip2 OUTCAR')
         f.close()
         
