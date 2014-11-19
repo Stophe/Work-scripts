@@ -46,8 +46,8 @@ def main():
         print "No outfile specified for that program yet!"
         exit()     
     
-    found_run_files = Find(starting_path, run_file)
-    found_out_files = Find(starting_path, out_file)
+    found_run_files = Find(starting_path, [run_file])
+    found_out_files = Find(starting_path, [out_file])
     
     for path in found_run_files:
         chdir(path)
