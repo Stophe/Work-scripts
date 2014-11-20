@@ -28,7 +28,7 @@ class Outcar(object):
         self.nkpts = 0
         self.polarization = [[],[]]
         self.born_charge_33_average = 0
-        self.ci_e33
+        self.ci_e33 = 0
         self._extract_data()
         self.total_kpoints = sum(self.kpoints)
     
