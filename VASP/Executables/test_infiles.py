@@ -81,9 +81,9 @@ def test_run_file(paths):
     for path in paths:
         run = Run(path)
         incar = Incar(path)
-        if incar.npar != 4 and ( run.nodes % incar.npar > 0 or run.nodes == 0 or incar.npar == 0):
-            print "Number of nodes and NPAR not compatible in:\n%s" % path
-            print "Nodes: %s\tNPAR: %s" % (run.nodes, incar.npar)
+        #if incar.npar != 4 and ( run.nodes % incar.npar > 0 or run.nodes == 0 or incar.npar == 0):
+        #    print "Number of nodes and NPAR not compatible in:\n%s" % path
+        #    print "Nodes: %s\tNPAR: %s" % (run.nodes, incar.npar)
 
 def test_poscar(paths):
     """

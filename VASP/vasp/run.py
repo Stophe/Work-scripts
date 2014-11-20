@@ -96,7 +96,7 @@ class Run(object):
         f.write("aprun -n %i /pdc/vol/vasp/%s/vasp > temp.out\n" % (self.nodes,
                                                          self.vasp_version))
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
         f.write('bzip2 OUTCAR')
         f.close()
         
@@ -123,7 +123,7 @@ class Run(object):
         f.write("aprun -n %i /pdc/vol/vasp/%s/vasp > temp.out\n" % (self.nodes,
                                                          self.vasp_version))
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
         f.write('bzip2 OUTCAR')
         f.close()
 
@@ -140,7 +140,7 @@ class Run(object):
         f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
         f.write('bzip2 OUTCAR')
         f.close()
         
@@ -157,7 +157,7 @@ class Run(object):
         f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
         f.write('bzip2 OUTCAR')
         f.close()
         
@@ -174,7 +174,7 @@ class Run(object):
         f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
         f.write('bzip2 OUTCAR')
         f.close()
         
@@ -193,7 +193,7 @@ class Run(object):
         f.write("mpprun /software/apps/vasp/%s/default/vasp" %
                 (self.vasp_version))
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
         f.write('bzip2 OUTCAR')
         f.close()
         
@@ -210,7 +210,7 @@ class Run(object):
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
                 (self.vasp_version))
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
         f.write('bzip2 OUTCAR')
         f.close()
         
@@ -234,7 +234,7 @@ class Run(object):
         f.write("cd $DIR\n")
         f.write("vasp\n")
         f.write('\n')
-        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR')       
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')       
         f.write('bzip2 OUTCAR')
         f.close()
 

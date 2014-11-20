@@ -294,9 +294,9 @@ def main():
                     i += 1  # Choose correct symbol
                 
             elif argument == 'polarization':
-                if 'PionX' not in col_titles:
-                    col_titles = col_titles + ['PionX [eAng]', 'PionY [eAng]', 'PionZ [eAng]',
-                                                 'PelX [eAng]', 'PelY [eAng]', 'PelZ [eAng]']
+                if 'p_ionX' not in col_titles:
+                    col_titles = col_titles + ['p_ionX [eAng]', 'p_ionY [eAng]', 'p_ionZ [eAng]',
+                                                 'p_elX [eAng]', 'p_elY [eAng]', 'p_elZ [eAng]']
                 results = results + outcar.polarization[0] + outcar.polarization[1]
                      
             elif argument == 'ic_piezoelectric_tensor':
