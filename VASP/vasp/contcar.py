@@ -194,12 +194,12 @@ class Contcar(object):
         return (scx, scy, scz)
     
     def calculate_average_u(self, return_all=False):
-        metals = ['Al', 'Sc', 'In', 'Y']
+        metals = ['Al', 'Sc', 'In', 'Y', 'Zr', 'Hf', 'Mg']
         other = ['N']
         sqs_repetitions = self._calculate_sqs_repetitions(metals, other)
         u_list = []
         for atom1 in self.supercell.atoms:
-            if atom1.symbol in metals:
+            if atom1.symbol not in other:
                 d = 0.
                 for atom2 in self.supercell.atoms:
                     if atom2.symbol in other:

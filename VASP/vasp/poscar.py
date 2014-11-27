@@ -177,7 +177,7 @@ class Poscar(object):
         outfile.write(str(self.supercell.primitive_cell))
         outfile.write(" ".join(self.symbols) + '\n') # Change this
         outfile.write(" ".join(str(x) for x in self.counts) + '\n') # and this
-        if self.selective_dynamics: outfile.write('Selective dynamics')
+        if self.selective_dynamics: outfile.write('Selective dynamics\n')
         outfile.write("Direct\n")
         for atom in self.supercell.atoms:
             if self.selective_dynamics:
