@@ -194,7 +194,7 @@ class Contcar(object):
         return (scx, scy, scz)
     
     def calculate_average_u(self, return_all=False):
-        metals = ['Al', 'Sc', 'In', 'Y', 'Zr', 'Hf', 'Mg']
+        metals = ['Al', 'Sc', 'In', 'Y', 'Zr', 'Hf', 'Mg', 'Ti']
         other = ['N']
         sqs_repetitions = self._calculate_sqs_repetitions(metals, other)
         u_list = []
