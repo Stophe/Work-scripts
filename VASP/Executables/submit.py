@@ -41,7 +41,7 @@ def main():
     else:
         program = "vasp"
     if program == "vasp":
-        out_file = "OUTCAR"
+        out_file = "OUTCAR.bz2"
     else:
         print "No outfile specified for that program yet!"
         exit()     
