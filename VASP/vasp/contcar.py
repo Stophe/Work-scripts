@@ -166,27 +166,27 @@ class Contcar(object):
         delta = np.linalg.norm(self.supercell.convert_to_real(r1 - r2))
         return delta
     
-    def _calculate_sqs_repetitions(self, metals, other):
+    def _calculate_sqs_repetitions(self, other):
         scx = 0
         scy = 0
         scz = 0
         
         for atom in self.supercell.atoms:
-            if (atom.symbol in metals
+            if (atom.symbol != other
                   and self.distance(array([0, 0, 0]),
                                   array([atom.position[0], atom.position[1], atom.position[2]])) < 0.5):
                 scx += 1
                 scy += 1
                 scz += 1
-            elif (atom.symbol in metals
+            elif (atom.symbol != other
                   and self.distance(array([0, 0, 0]),
                                   array([atom.position[0], atom.position[1], 0])) < 0.5):
                 scz += 1
-            elif (atom.symbol in metals
+            elif (atom.symbol != other
                   and self.distance(array([0, 0, 0]),
                                   array([0, atom.position[1], atom.position[2]])) < 0.5):
                 scx += 1
-            elif (atom.symbol in metals
+            elif (atom.symbol != other
                   and self.distance(array([0, 0, 0]),
                                   array([atom.position[0], 0, atom.position[2]])) < 0.5):
                 scy += 1
@@ -194,25 +194,28 @@ class Contcar(object):
         return (scx, scy, scz)
     
     def calculate_average_u(self, return_all=False):
-        sqs_repetitions = self._calculate_sqs_repetitions(metals, other)
+        sqs_repetitions = self._calculate_sqs_repetitions('N')
+        print sqs_repetitions
         u_list = []
         for atom1 in self.supercell.atoms:
             if atom1.symbol != 'N':
                 d = 0.
                 for atom2 in self.supercell.atoms:
                     if atom2.symbol == 'N':
-                        if (atom2.position[2] > atom1.position[2] 
-                            and self.distance(array([atom1.position[0], atom1.position[1], 0]),
-                                              array([atom2.position[0], atom2.position[1], 0])) < 0.5):
-                            new_d = self.distance(atom1.position, atom2.position) 
-                            if d == 0 or new_d < d:
-                                d = new_d
-                        elif (atom2.position[2] + 1. > atom1.position[2] 
-                            and self.distance(array([atom1.position[0], atom1.position[1], 0]),
-                                              array([atom2.position[0], atom2.position[1], 0])) < 0.5 ):
-                            new_d = self.distance(atom1.position, atom2.position + array([0, 0, 1.]))
-                            if d == 0 or new_d < d: 
-                                d = new_d
+                        for i in range(-1, 2):
+                            for j in range(-1, 2):
+                                if (atom2.position[2] > atom1.position[2] 
+                                    and self.distance(array([atom1.position[0] + i, atom1.position[1] + j, 0]),
+                                                      array([atom2.position[0], atom2.position[1], 0])) < 0.5):
+                                    new_d = self.distance(atom1.position, atom2.position) 
+                                    if d == 0 or new_d < d:
+                                        d = new_d
+                                elif (atom2.position[2] + 1. > atom1.position[2] 
+                                    and self.distance(array([atom1.position[0] + i, atom1.position[1] + j, 0]),
+                                                      array([atom2.position[0], atom2.position[1], 0])) < 0.5 ):
+                                    new_d = self.distance(atom1.position, atom2.position + array([0, 0, 1.]))
+                                    if d == 0 or new_d < d: 
+                                        d = new_d
                 if d == 0:
                     print "Found no atom to compare with"
                 else:
