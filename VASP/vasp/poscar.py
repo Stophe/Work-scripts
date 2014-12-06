@@ -18,11 +18,12 @@ class Poscar(object):
     classdocs
     '''
 
-    def __init__(self, path, supercell=None, title="", selective_dynamics=False, velocities=False):
+    def __init__(self, path, suffix="", supercell=None, title="", selective_dynamics=False, velocities=False):
         '''
         Constructor
         '''
         self.path = path
+        self.suffix = suffix
         self.version = 0
         self.title = title
         self.selective_dynamics = selective_dynamics
@@ -89,20 +90,20 @@ class Poscar(object):
         
             
 
-        if getline("%s/POSCAR" % self.path, 6).strip().isdigit():
+        if getline("%s/POSCAR%s" % (self.path, self.suffix), 6).strip().isdigit():
             self.version = 4
-            self.counts = _int_list(getline("%s/POSCAR" % self.path, 6).split())
+            self.counts = _int_list(getline("%s/POSCAR%s" % (self.path, self.suffix), 6).split())
             self.symbols = ['None'] * len(self.counts)
         else:
             self.version = 5
-            self.symbols = getline("%s/POSCAR" % self.path, 6).split()
+            self.symbols = getline("%s/POSCAR%s" % (self.path, self.suffix), 6).split()
             try:
-                self.counts = _int_list(getline("%s/POSCAR" % self.path, 7).split())
+                self.counts = _int_list(getline("%s/POSCAR%s" % (self.path, self.suffix), 7).split())
             except:
-                print getline("%s/POSCAR" % self.path, 7)
+                print getline("%s/POSCAR%s" % (self.path, self.suffix), 7)
         
         if len(self.counts) == 0:
-            print "Error in Poscar at: %s" % self.path
+            print "Error in POSCAR%s at: %s" % (self.suffix, self.path)
             exit()
         maximum = self.counts[0]
         for count in self.counts:
@@ -113,41 +114,41 @@ class Poscar(object):
         pos_starting_line = 0
 
         if self.version >= 5:
-            if getline("%s/POSCAR" % self.path, 8)[0] in ['s', 'S']:
+            if getline("%s/POSCAR%s" % (self.path, self.suffix), 8)[0] in ['s', 'S']:
                 self.selective_dynamics = True
-                if  getline("%s/POSCAR" % self.path, 9)[0] in ['D', 'd']:
+                if  getline("%s/POSCAR%s" % (self.path, self.suffix), 9)[0] in ['D', 'd']:
                     self.direct_coords = True
                 pos_starting_line = 10
             else:
-                if  getline("%s/POSCAR" % self.path, 8)[0] in ['D', 'd']:
+                if  getline("%s/POSCAR%s" % (self.path, self.suffix), 8)[0] in ['D', 'd']:
                     self.direct_coords = True
                 pos_starting_line = 9
         else:
-            if getline("%s/POSCAR" % self.path, 7)[0] in ['s', 'S']:
+            if getline("%s/POSCAR%s" % (self.path, self.suffix), 7)[0] in ['s', 'S']:
                 self.selective_dynamics = True
-                if  getline("%s/POSCAR" % self.path, 8)[0] in ['D', 'd']:
+                if  getline("%s/POSCAR%s" % (self.path, self.suffix), 8)[0] in ['D', 'd']:
                     self.direct_coords = True
                 pos_starting_line = 9
             else:
-                if  getline("%s/POSCAR" % self.path, 7)[0] in ['D', 'd']:
+                if  getline("%s/POSCAR%s" % (self.path, self.suffix), 7)[0] in ['D', 'd']:
                     self.direct_coords = True
                 pos_starting_line = 6
 
-        self.title = getline("%s/POSCAR" % self.path, 1).rstrip()
-        self.supercell.a0 = float(getline("%s/POSCAR" % self.path, 2))
-        a1 = _float_list(getline("%s/POSCAR" % self.path, 3).split())
+        self.title = getline("%s/POSCAR%s" % (self.path, self.suffix), 1).rstrip()
+        self.supercell.a0 = float(getline("%s/POSCAR%s" % (self.path, self.suffix), 2))
+        a1 = _float_list(getline("%s/POSCAR%s" % (self.path, self.suffix), 3).split())
         a1 = array([a1[0], a1[1], a1[2]])
-        a2 = _float_list(getline("%s/POSCAR" % self.path, 4).split())
+        a2 = _float_list(getline("%s/POSCAR%s" % (self.path, self.suffix), 4).split())
         a2 = array([a2[0], a2[1], a2[2]])
-        a3 = _float_list(getline("%s/POSCAR" % self.path, 5).split())
+        a3 = _float_list(getline("%s/POSCAR%s" % (self.path, self.suffix), 5).split())
         a3 = array([a3[0], a3[1], a3[2]])
         self.surface_area = self.supercell.a0 * 2 * norm(cross(a1, a2))
         self.supercell.primitive_cell = PrimitiveCell(a1, a2, a3)
-        f = open("%s/POSCAR" % self.path)
+        f = open("%s/POSCAR%s" % (self.path, self.suffix))
         for i in range(0, len(self.counts)):
             for j in range(pos_starting_line,
                               pos_starting_line + self.counts[i]):
-                position = getline("%s/POSCAR" % self.path, j).split()
+                position = getline("%s/POSCAR%s" % (self.path, self.suffix), j).split()
                 if self.selective_dynamics:
                     relax = position[3:6]
                 position = _float_list(position[:3])
