@@ -194,15 +194,13 @@ class Contcar(object):
         return (scx, scy, scz)
     
     def calculate_average_u(self, return_all=False):
-        metals = ['Al', 'Sc', 'In', 'Y', 'Zr', 'Hf', 'Mg', 'Ti']
-        other = ['N']
         sqs_repetitions = self._calculate_sqs_repetitions(metals, other)
         u_list = []
         for atom1 in self.supercell.atoms:
-            if atom1.symbol not in other:
+            if atom1.symbol != 'N':
                 d = 0.
                 for atom2 in self.supercell.atoms:
-                    if atom2.symbol in other:
+                    if atom2.symbol == 'N':
                         if (atom2.position[2] > atom1.position[2] 
                             and self.distance(array([atom1.position[0], atom1.position[1], 0]),
                                               array([atom2.position[0], atom2.position[1], 0])) < 0.5):
@@ -219,9 +217,9 @@ class Contcar(object):
                     print "Found no atom to compare with"
                 else:
                     u_list.append(d / (self.coa * self.supercell.a0) * sqs_repetitions[2])
-        if 1 - u_list[1] < u_list[1]:
-            for i in range(len(u_list)):
-                u_list[i] = 1 - u_list[i]
+        #if 1 - u_list[1] < u_list[1]:
+        #    for i in range(len(u_list)):
+        #        u_list[i] = 1 - u_list[i]
         
         if return_all:
             return u_list
