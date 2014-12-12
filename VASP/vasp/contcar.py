@@ -167,7 +167,7 @@ class Contcar(object):
         return delta
     
     def _calculate_sqs_repetitions(self, other):
-        if self.supercell.primitive_cell.matrix[1, 0] > 3:
+        if self.supercell.primitive_cell.matrix[1, 0] < 1.5:
             return (4, 4, 2)
         else:
             return (4, 2, 4)
@@ -176,9 +176,11 @@ class Contcar(object):
     def calculate_average_u(self, return_all=False):
         sqs_repetitions = self._calculate_sqs_repetitions('N')
         u_list = []
+        cd_list = []
         for atom1 in self.supercell.atoms:
             if atom1.symbol != 'N':
-                d = 0.
+                d = 0.0
+                cd = 0.0
                 for atom2 in self.supercell.atoms:
                     if atom2.symbol == 'N':
                         for i in range(-1, 2):
@@ -187,22 +189,31 @@ class Contcar(object):
                                     and self.distance(array([atom1.position[0] + i, atom1.position[1] + j, 0]),
                                                       array([atom2.position[0], atom2.position[1], 0])) < 0.5):
                                     new_d = self.distance(atom1.position, atom2.position) 
+                                    new_cd = atom2.position[2] - atom1.position[2]
                                     if d == 0 or new_d < d:
                                         d = new_d
+                                    if cd == 0 or new_cd < cd:
+                                        cd = new_cd
                                 elif (atom2.position[2] + 1. > atom1.position[2] 
                                     and self.distance(array([atom1.position[0] + i, atom1.position[1] + j, 0]),
                                                       array([atom2.position[0], atom2.position[1], 0])) < 0.5 ):
                                     new_d = self.distance(atom1.position, atom2.position + array([0, 0, 1.]))
+                                    new_cd = atom2.position[2] + 1 - atom1.position[2]
                                     if d == 0 or new_d < d: 
                                         d = new_d
-                if d == 0:
+                                    if cd == 0 or new_cd < cd: 
+                                        cd = new_cd
+                if d == 0 or cd == 0:
                     print "Found no atom to compare with"
                 else:
                     u_list.append(d / (self.coa * self.supercell.a0) * sqs_repetitions[2])
+                    cd_list.append(cd * sqs_repetitions[2])
         
         if return_all:
             return u_list
         else:
+            print u_list
+            print cd_list
             return sum(u_list) / len(u_list)
 
 if __name__ == '__main__':
