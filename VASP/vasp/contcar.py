@@ -167,48 +167,14 @@ class Contcar(object):
         return delta
     
     def _calculate_sqs_repetitions(self, other):
-        possible_structures = [(4, 2, 4),(4, 4, 2)] 
+        if self.supercell.primitive_cell.matrix[1, 0] > 3:
+            return (4, 4, 2)
+        else:
+            return (4, 2, 4)
         
-        for structure in possible_structures:
-            atoms = 0
-            
-            for atoms in self.supercell.atoms:
-                if (atom.position[0] <= 1.0 / structure[0] and 
-                    atom.position[1] <= 1.0 / structure[1] and 
-                    atom.position[2] <= 1.0 / structure[2]):
-                    atoms += 1
-            if atoms == 4: return structure
-        return (0, 0, 0)
-        
-        scx = 0
-        scy = 0
-        scz = 0
-        
-        for atom in self.supercell.atoms:
-            if (atom.symbol != other
-                  and self.distance(array([0, 0, 0]),
-                                  array([atom.position[0], atom.position[1], atom.position[2]])) < 0.5):
-                scx += 1
-                scy += 1
-                scz += 1
-            elif (atom.symbol != other
-                  and self.distance(array([0, 0, 0]),
-                                  array([atom.position[0], atom.position[1], 0])) < 0.5):
-                scz += 1
-            elif (atom.symbol != other
-                  and self.distance(array([0, 0, 0]),
-                                  array([0, atom.position[1], atom.position[2]])) < 0.5):
-                scx += 1
-            elif (atom.symbol != other
-                  and self.distance(array([0, 0, 0]),
-                                  array([atom.position[0], 0, atom.position[2]])) < 0.5):
-                scy += 1
-
-        return (scx, scy, scz)
     
     def calculate_average_u(self, return_all=False):
         sqs_repetitions = self._calculate_sqs_repetitions('N')
-        print sqs_repetitions
         u_list = []
         for atom1 in self.supercell.atoms:
             if atom1.symbol != 'N':
@@ -233,9 +199,6 @@ class Contcar(object):
                     print "Found no atom to compare with"
                 else:
                     u_list.append(d / (self.coa * self.supercell.a0) * sqs_repetitions[2])
-        #if 1 - u_list[1] < u_list[1]:
-        #    for i in range(len(u_list)):
-        #        u_list[i] = 1 - u_list[i]
         
         if return_all:
             return u_list
