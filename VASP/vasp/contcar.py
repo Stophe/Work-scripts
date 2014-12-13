@@ -209,12 +209,11 @@ class Contcar(object):
                     u_list.append(d / (self.coa * self.supercell.a0) * sqs_repetitions[2])
                     cd_list.append(cd * sqs_repetitions[2])
         
+        # Change to u_list to get u parameter not only in c-direction
         if return_all:
-            return u_list
+            return cd_list
         else:
-            print u_list
-            print cd_list
-            return sum(u_list) / len(u_list)
+            return sum(cd_list) / len(cd_list)
 
 if __name__ == '__main__':
     contcar = Contcar("/Volumes/Macintosh HD 2/git/Work/VASP/Tests/DataExtraction/Ex4")
