@@ -93,7 +93,11 @@ def main():
     If no argument is given the default is to get all data.
     If a path is given, that will be used as the current directory.
     """
-    current_path = getcwd()
+    if "path=" in sys.argv[1]:
+        current_path = sys.argv[1][5:]
+    else:
+        current_path = getcwd()
+    print current_path
     if len(sys.argv) == 1:
         sys.argv = sys.argv + ['kpoints', 'kpoint_type', 'total_kpoints',
                                'title', 'formula_unit',
