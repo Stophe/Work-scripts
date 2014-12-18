@@ -167,7 +167,7 @@ class Contcar(object):
         return delta
     
     def _calculate_sqs_repetitions(self, other):
-        if self.supercell.primitive_cell.matrix[1, 0] < 1.5:
+        if self.supercell.primitive_cell.matrix[1, 0] > 1.1:
             return (4, 4, 2)
         else:
             return (4, 2, 4)
@@ -175,6 +175,7 @@ class Contcar(object):
     
     def calculate_average_u(self, return_all=False):
         sqs_repetitions = self._calculate_sqs_repetitions('N')
+        print sqs_repetitions
         u_list = []
         cd_list = []
         for atom1 in self.supercell.atoms:
