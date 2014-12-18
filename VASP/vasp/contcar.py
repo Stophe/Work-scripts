@@ -167,7 +167,7 @@ class Contcar(object):
         return delta
     
     def _calculate_sqs_repetitions(self, other):
-        if self.supercell.primitive_cell.matrix[1, 0] > 1.1:
+        if self.supercell.primitive_cell.matrix[1, 0] < 0:
             return (4, 4, 2)
         else:
             return (4, 2, 4)
