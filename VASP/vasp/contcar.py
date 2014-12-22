@@ -167,10 +167,12 @@ class Contcar(object):
         return delta
     
     def _calculate_sqs_repetitions(self, other):
-        if self.supercell.primitive_cell.matrix[1, 0] < 0:
+        if abs(self.supercell.primitive_cell.matrix[1, 0]) > 1.1:
             return (4, 4, 2)
-        else:
+        elif abs(self.supercell.primitive_cell.matrix[1, 0]) > 0.51:
             return (4, 2, 4)
+        else
+            return (1, 1, 1)
         
     
     def calculate_average_u(self, return_all=False):
