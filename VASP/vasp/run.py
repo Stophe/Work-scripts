@@ -58,6 +58,8 @@ class Run(object):
     def create_file(self):
         if self.computer == 'pdc':
             self._create_PDC_file()
+        elif self.computer == 'beskow':
+            self._create_Beskow_file()
         elif self.computer == 'nsc':
             self._create_NSC_file()
         elif self.computer == 'prace':
@@ -99,6 +101,27 @@ class Run(object):
         f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
         f.write('bzip2 OUTCAR')
         f.close()
+    
+    # Beskow should be multiples of 40
+    def _create_Beskow_file(self):
+        f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
+        f.write("#!/bin/bash -l\n")
+        f.write("#Beskow run file\n")
+        f.write("#SBATCH -J %s\n" % self.title)
+        f.write("#SBATCH -t %s\n" % self.walltime)
+        f.write("#SBATCH -n %i\n" % self.nodes) # Processors as on Lindgren
+        f.write("#SBATCH -A %s\n" % self.project)
+        f.write("#SBATCH -e error_file.e\n")
+        f.write("#SBATCH -o output_file.o\n")
+        f.write('\n')
+        f.write("#Run calculation\n")
+        f.write("aprun -n %i /pdc/vol/vasp/%s/default/vasp" %
+                (self.nodes, self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
+        f.write('bzip2 OUTCAR')
+        f.close()
+    
         
     def _create_HPC2N_file(self):
         f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')

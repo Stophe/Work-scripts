@@ -87,16 +87,15 @@ def test_run_file(paths):
 
 def test_poscar(paths):
     """
-    Completely useless test since Poscar only reads positions according to count.
+    Test POSCAR
     """
     for path in paths:
         if os.path.isfile(os.path.join(path, 'POSCAR')):
             poscar = Poscar(path)
         else:
             poscar = Poscar(os.path.join(path, '01'))
-        if sum(poscar.counts) != len(poscar.supercell.atoms):
-            print "Different nr of atomic positions than specified in:\n%s" % path
-            print "Counts: %s\tPositions: %s" % (poscar.counts, len(poscar.supercell.atoms))
+        if poscar.supercell.a0 > 10:
+            print "ALAT too high. Possibly because volume was entered as positive."
         
 if __name__ == '__main__':
     print "\nRunning tests\n" + 50*"-"
