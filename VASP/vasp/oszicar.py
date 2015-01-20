@@ -18,6 +18,7 @@ class Oszicar(object):
         self.total_energy = 0
         self.magmom = 0
         self.all_energies = []
+        self.iterations = 0
         self._extract_data()
 
     def _extract_data(self):
@@ -26,6 +27,7 @@ class Oszicar(object):
         for line in f:
             if 'E0=' in line:
                 self.all_energies.append(float(line.split()[4]))
+                self.iterations = self.iterations + 1
                 if 'mag=' in line:
                     self.magmom = float(line.split()[9])
         f.close()
