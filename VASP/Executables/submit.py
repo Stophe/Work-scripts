@@ -17,7 +17,7 @@ from vasp.contcar import Contcar
 
 def get_submit_command():
     domain = getfqdn()
-    if ".pdc.kth.se" in domain or ".hpc2n.umu.se" in domain:
+    if ".hpc2n.umu.se" in domain:
         return "qsub"
     elif ".nsc.liu.se" in domain or 'neolith' in domain or 'triolith' in domain:
         return "sbatch"

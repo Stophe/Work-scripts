@@ -32,7 +32,7 @@ def oszicar_is_needed():
     """Checks if information from the OSZICAR is needed. Returns True if it is,
     no otherwise.
     """
-    possible_settings = ['total_energy', 'all_energies', 'magmom']
+    possible_settings = ['total_energy', 'all_energies', 'magmom', 'iterations']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -328,6 +328,10 @@ def main():
                 if 'Born EC 33 [e]' not in col_titles:
                     col_titles.append('Born EC 33 [e]')
                 results.append(outcar.born_charge_33_average)
+            elif argument == 'iterations':
+                if 'Iterations' not in col_titles:
+                    col_titles.append('Iterations')
+                results.append(oszicar.iterations)
                 
                 
 
