@@ -26,8 +26,8 @@ class Oszicar(object):
         f = open("%s/OSZICAR" % (self.path), 'r')
         for line in f:
             if 'E0=' in line:
+                self.iterations = int(line.split()[0])  
                 self.all_energies.append(float(line.split()[4]))
-                self.iterations = self.iterations + 1
                 if 'mag=' in line:
                     self.magmom = float(line.split()[9])
         f.close()
