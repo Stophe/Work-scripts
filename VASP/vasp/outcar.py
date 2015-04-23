@@ -82,15 +82,7 @@ class Outcar(object):
                     bec.append(l[3])
                     f.next()
                 self.born_charge_33_average = sum(abs(bec))/len(bec)
-        
-        
-        try:
-            f.seek(-500000, 2)
-        except:
-            print self.path
-
-        for line in f:
-            if 'volume of cell' in line:
+            elif 'volume of cell' in line:
                 self.volume = float(line.split()[4])
             elif 'Total CPU time' in line:
                 self.total_cpu_time = line.split()[5]

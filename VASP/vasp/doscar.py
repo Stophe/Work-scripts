@@ -25,8 +25,8 @@ class Doscar(object):
         self.min = 0.
         self.steps = 0.
         self.step_size = 0.
-        self.tot_nr_of_electrons = 0
-        self.tot_nr_of_atoms = 0
+        self.total_nr_of_electrons = 0
+        self.total_nr_of_atoms = 0
         try:
             self._extract_data()
         except:
@@ -40,11 +40,11 @@ class Doscar(object):
                 new_list.append(float(item))
             return new_list
 
-        self.tot_nr_of_electrons = Outcar(self.path).tot_nr_of_electrons
-
+        self.total_nr_of_electrons = Outcar(self.path).total_nr_of_electrons
+        
         first = True
 
-        self.tot_nr_of_atoms = int(getline('%s/DOSCAR' % self.path,
+        self.total_nr_of_atoms = int(getline('%s/DOSCAR' % self.path,
                                            1).split()[0])
         line = _float_list(getline('%s/DOSCAR' % self.path, 6).split())
         self.max = line[0]
@@ -56,7 +56,7 @@ class Doscar(object):
             line = getline('%s/DOSCAR' % self.path, i).split()
             line = _float_list(line)
             self.dos.append([line[0], line[1], line[2]])
-            if line[2] == float(self.tot_nr_of_electrons):
+            if line[2] == float(self.total_nr_of_electrons):
                 if first:
                     first = False
                     lower_bandgap = line[0]
@@ -65,7 +65,7 @@ class Doscar(object):
         self.fermi_level = ((end_of_bandgap - lower_bandgap)
                             / 2. + lower_bandgap)
         last_line = self.steps + 7
-        atoms = self.tot_nr_of_atoms
+        atoms = self.total_nr_of_atoms
         while atoms:
             temp = []
             tot = 0
