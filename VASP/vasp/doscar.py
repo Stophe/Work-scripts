@@ -39,7 +39,6 @@ class Doscar(object):
             for item in lst:
                 new_list.append(float(item))
             return new_list
-
         self.total_nr_of_electrons = Outcar(self.path).total_nr_of_electrons
         
         first = True

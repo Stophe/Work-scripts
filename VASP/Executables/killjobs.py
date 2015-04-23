@@ -14,7 +14,7 @@ if __name__ == '__main__':
     if len(argv) < 4:
         if ".pdc.kth.se" in domain:
             for i in range(int(argv[1]), int(argv[2]) + 1):
-                system("qdel %s.basslet.pdc.kth.se" % i)
+                system("scancel %i" % i)
         elif ".nsc.liu.se" in domain:
             for i in range(int(argv[1]), int(argv[2]) + 1):
                 system("scancel %i" % i)
