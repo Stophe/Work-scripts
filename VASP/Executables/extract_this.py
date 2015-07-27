@@ -21,7 +21,7 @@ def outcar_is_needed():
     possible_settings = ['total_cpu_time', 'volume', 'dos_per_atom', 'encut',
                          'kpoints', 'total_kpoints', 'nodes', 'total_nr_of_ions', 
                          'ic_piezoelectric_tensor', 'polarization', 'bc_33_average',
-                         'ci_e33']
+                         'ci_e33', 'permittivity']
     if len(set(possible_settings).intersection(set(sys.argv))) > 0:
         return True
     else:
@@ -332,6 +332,21 @@ def main():
                 if 'Iterations' not in col_titles:
                     col_titles.append('Iterations')
                 results.append(oszicar.iterations)
+            elif argument == 'permittivity':
+                f = open('%s/permittivity.csv' % current_path, 'w')
+                f.write('MACROSCOPIC STATIC DIELECTRIC TENSOR (including local field effects in DFT)\n')
+                permittivity = outcar.permittivity
+                f.write('X,Y,Z\n')
+                for item in permittivity[0]:
+                    f.write(str(item) + ',')
+                f.write('\n')
+                for item in permittivity[1]:
+                    f.write(str(item) + ',')
+                f.write('\n')
+                for item in permittivity[2]:
+                    f.write(str(item) + ',')
+                f.write('\n')
+                f.close()
                 
                 
 

@@ -27,6 +27,7 @@ class Outcar(object):
         self.kpoints = (0, 0, 0)
         self.nkpts = 0
         self.polarization = [[],[]]
+        self.permittivity = [[],[],[]]
         self.born_charge_33_average = 0
         self.ci_e33 = 0
         self._extract_data()
@@ -82,6 +83,13 @@ class Outcar(object):
                     bec.append(l[3])
                     f.next()
                 self.born_charge_33_average = sum(abs(bec))/len(bec)
+            elif 'MACROSCOPIC STATIC DIELECTRIC TENSOR (including local field effects in DFT)':
+                l = f.next().next().split()
+                self.permittivity[0] = l
+                l = f.next().split()
+                self.permittivity[1] = l
+                l = f.next().split()
+                self.permittivity[2] = l
         
         
         try:
