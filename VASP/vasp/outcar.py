@@ -77,12 +77,13 @@ class Outcar(object):
                 self.ci_e33 = l[3]
             elif 'BORN EFFECTIVE CHARGES' in line:
                 bec = []
-                for i in range(2): f.next()
-                for i in range(self.total_nr_of_ions):
-                    l = f.next().next().next().split()
-                    bec.append(l[3])
+                for i in range(2 + self.total_nr_of_ions/2*4): f.next()
+                for i in range(self.total_nr_of_ions/2):
+                    for i in range(2): f.next()
+                    l = f.next().split()
+                    bec.append(float(l[3]))
                     f.next()
-                self.born_charge_33_average = sum(abs(bec))/len(bec)
+                self.born_charge_33_average = sum(bec)/len(bec)
             elif 'MACROSCOPIC STATIC DIELECTRIC TENSOR (including local field effects in DFT)' in line:
                 f.next()
                 l = f.next().split()
