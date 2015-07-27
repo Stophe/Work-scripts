@@ -27,7 +27,6 @@ class Outcar(object):
         self.kpoints = (0, 0, 0)
         self.nkpts = 0
         self.polarization = [[],[]]
-        self.permittivity = [[],[],[]]
         self.born_charge_33_average = 0
         self.ci_e33 = 0
         self._extract_data()
@@ -83,22 +82,7 @@ class Outcar(object):
                     bec.append(l[3])
                     f.next()
                 self.born_charge_33_average = sum(abs(bec))/len(bec)
-            elif 'MACROSCOPIC STATIC DIELECTRIC TENSOR (including local field effects in DFT)':
-                l = f.next().next().split()
-                self.permittivity[0] = l
-                l = f.next().split()
-                self.permittivity[1] = l
-                l = f.next().split()
-                self.permittivity[2] = l
-        
-        
-        try:
-            f.seek(-500000, 2)
-        except:
-            print self.path
-
-        for line in f:
-            if 'volume of cell' in line:
+            elif 'volume of cell' in line:
                 self.volume = float(line.split()[4])
             elif 'Total CPU time' in line:
                 self.total_cpu_time = line.split()[5]
