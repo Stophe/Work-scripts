@@ -190,7 +190,7 @@ class Contcar(object):
                             for j in range(-1, 2):
                                 if (atom2.position[2] > atom1.position[2] 
                                     and self.distance(array([atom1.position[0] + i, atom1.position[1] + j, 0]),
-                                                      array([atom2.position[0], atom2.position[1], 0])) < 0.5):
+                                                      array([atom2.position[0], atom2.position[1], 0])) < 1.5):
                                     new_d = self.distance(atom1.position, atom2.position) 
                                     new_cd = atom2.position[2] - atom1.position[2]
                                     if d == 0 or new_d < d:
@@ -199,7 +199,7 @@ class Contcar(object):
                                         cd = new_cd
                                 elif (atom2.position[2] + 1. > atom1.position[2] 
                                     and self.distance(array([atom1.position[0] + i, atom1.position[1] + j, 0]),
-                                                      array([atom2.position[0], atom2.position[1], 0])) < 0.5 ):
+                                                      array([atom2.position[0], atom2.position[1], 0])) < 1.5 ):
                                     new_d = self.distance(atom1.position, atom2.position + array([0, 0, 1.]))
                                     new_cd = atom2.position[2] + 1 - atom1.position[2]
                                     if d == 0 or new_d < d: 
