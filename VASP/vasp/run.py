@@ -68,6 +68,8 @@ class Run(object):
             self._create_HPC2N_file()
         elif self.computer == 'triolith':
             self._create_Triolith_file()
+        elif self.computer == 'gamma_devel':
+            self._create_Gamma_devel_file()
         elif self.computer == 'matter':
             self._create_Matter_file()
         elif self.computer == 'green':
@@ -229,6 +231,23 @@ class Run(object):
         f.write("#SBATCH -t %s\n" % self.walltime)
         f.write("#SBATCH -N %i --exclusive\n" % self.nodes)
         f.write("#SBATCH -U %s\n" % self.project)
+        f.write('\n')
+        f.write("#Run calculation\n")
+        f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
+                (self.vasp_version))
+        f.write('\n')
+        f.write('rm vasprun.xml CHG CHGCAR PCDAT PROCAR EIGENVAL IBZKPT WAVECAR OUTCAR.bz2\n')
+        f.write('bzip2 OUTCAR')
+        f.close()
+        
+    def _create_Gamma_devel_file(self):
+        f = open("%s/RUN%s" % (self.path, self.filename_suffix), 'w')
+        f.write("#!/bin/bash\n")
+        f.write("#Gamma devel run file\n")
+        f.write("#SBATCH -J %s\n" % self.title)
+        f.write("#SBATCH -t %s\n" % self.walltime)
+        f.write("#SBATCH -N %i --exclusive\n" % self.nodes)
+        f.write("#SBATCH --reservation=devel\n")
         f.write('\n')
         f.write("#Run calculation\n")
         f.write("mpprun /software/apps/vasp/%s/default/vasp-half" %
